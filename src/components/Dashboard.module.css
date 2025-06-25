@@ -1,0 +1,293 @@
+.dashboard {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.header {
+  background-color: #ffffff;
+  padding: 1.2rem 4vw;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header h1 {
+  margin: 0;
+  color: #333;
+  font-size: 2rem;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 1vw;
+}
+
+.logoutButton {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.5rem 1vw;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.logoutButton:hover {
+  background-color: #c82333;
+}
+
+.content {
+  display: flex;
+  min-height: calc(100vh - 70px);
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #ffffff;
+  padding: 2rem 2vw;
+  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+}
+
+.sidebar nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar nav ul li {
+  margin-bottom: 1rem;
+}
+
+.navButton {
+  width: 100%;
+  background: none;
+  border: none;
+  color: #333;
+  text-align: left;
+  padding: 0.8rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+}
+
+.navButton:hover {
+  background-color: #f8f9fa;
+}
+
+.navButton.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.mainContent {
+  flex: 1;
+  padding: 2rem 2vw;
+  box-sizing: border-box;
+}
+
+.section {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 2rem 2vw;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.section h2 {
+  margin-top: 0;
+  color: #333;
+  margin-bottom: 2rem;
+  font-size: 1.5rem;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2vw;
+}
+
+.statCard {
+  background-color: #f8f9fa;
+  padding: 1.5rem 1vw;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.statCard h3 {
+  margin: 0;
+  color: #666;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.statCard p {
+  margin: 0;
+  color: #333;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.actionBar {
+  margin-bottom: 2rem;
+}
+
+.addButton {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.addButton:hover {
+  background-color: #218838;
+}
+
+.tableContainer {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.table th,
+.table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.table th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+  color: #333;
+}
+
+.table tr:hover {
+  background-color: #f8f9fa;
+}
+
+.statusActive {
+  background-color: #d4edda;
+  color: #155724;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.actionButton {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-right: 0.5rem;
+  font-size: 0.8rem;
+  transition: background-color 0.3s ease;
+}
+
+.actionButton:hover {
+  background-color: #0056b3;
+}
+
+.actionButtonDelete {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: background-color 0.3s ease;
+}
+
+.actionButtonDelete:hover {
+  background-color: #c82333;
+}
+
+.settingsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.settingCard {
+  background-color: #f8f9fa;
+  padding: 2rem;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+}
+
+.settingCard h3 {
+  margin: 0 0 1rem 0;
+  color: #333;
+  font-size: 1.2rem;
+}
+
+.settingCard p {
+  margin: 0 0 1.5rem 0;
+  color: #666;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .header h1 {
+    font-size: 1.5rem;
+  }
+  .sidebar, .mainContent, .section {
+    padding: 1.5rem 1vw;
+  }
+  .stats {
+    gap: 1.5vw;
+  }
+  .settingsGrid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .header {
+    padding: 1rem 1vw;
+  }
+  .header h1 {
+    font-size: 1.2rem;
+  }
+  .sidebar, .mainContent, .section {
+    padding: 1rem 0.5vw;
+  }
+  .stats {
+    gap: 1vw;
+  }
+  .table th,
+  .table td {
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .header {
+    padding: 0.5rem 0.2vw;
+  }
+  .header h1 {
+    font-size: 1rem;
+  }
+  .sidebar, .mainContent, .section {
+    padding: 0.5rem 0.1vw;
+  }
+  .stats {
+    gap: 0.5vw;
+  }
+} 
