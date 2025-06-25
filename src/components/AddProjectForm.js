@@ -1,42 +1,5 @@
 import React, { useRef, useState } from 'react';
-
-const formStyles = {
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '1.2rem',
-  width: '100%',
-  maxWidth: '400px',
-};
-
-const labelStyles = {
-  fontWeight: 500,
-  marginBottom: '0.3rem',
-};
-
-const inputStyles = {
-  padding: '0.8rem',
-  border: '1px solid #ccc',
-  borderRadius: '6px',
-  fontSize: '1rem',
-};
-
-const textareaStyles = {
-  ...inputStyles,
-  minHeight: '80px',
-  resize: 'vertical',
-};
-
-const buttonStyles = {
-  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-  color: 'white',
-  border: 'none',
-  padding: '1rem',
-  borderRadius: '6px',
-  fontSize: '1rem',
-  fontWeight: 600,
-  cursor: 'pointer',
-  marginTop: '1rem',
-};
+import styles from './AddProjectForm.module.css';
 
 const AddProjectForm = ({ onSubmit, onCancel }) => {
   const [form, setForm] = useState({
@@ -72,11 +35,11 @@ const AddProjectForm = ({ onSubmit, onCancel }) => {
   };
 
   return (
-    <form style={formStyles} onSubmit={handleSubmit}>
+    <form className={styles.form} onSubmit={handleSubmit}>
       <div>
-        <label style={labelStyles} htmlFor="image">Project Image</label>
+        <label className={styles.label} htmlFor="image">Project Image</label>
         <input
-          style={inputStyles}
+          className={styles.input}
           type="file"
           id="image"
           name="image"
@@ -86,13 +49,13 @@ const AddProjectForm = ({ onSubmit, onCancel }) => {
           required
         />
         {preview && (
-          <img src={preview} alt="Preview" style={{ marginTop: '0.5rem', maxWidth: '100%', borderRadius: '6px' }} />
+          <img src={preview} alt="Preview" className={styles.preview} />
         )}
       </div>
       <div>
-        <label style={labelStyles} htmlFor="title">Title</label>
+        <label className={styles.label} htmlFor="title">Title</label>
         <input
-          style={inputStyles}
+          className={styles.input}
           type="text"
           id="title"
           name="title"
@@ -102,9 +65,9 @@ const AddProjectForm = ({ onSubmit, onCancel }) => {
         />
       </div>
       <div>
-        <label style={labelStyles} htmlFor="description">Description</label>
+        <label className={styles.label} htmlFor="description">Description</label>
         <textarea
-          style={textareaStyles}
+          className={styles.textarea}
           id="description"
           name="description"
           value={form.description}
@@ -113,9 +76,9 @@ const AddProjectForm = ({ onSubmit, onCancel }) => {
         />
       </div>
       <div>
-        <label style={labelStyles} htmlFor="technologies">Technologies Used</label>
+        <label className={styles.label} htmlFor="technologies">Technologies Used</label>
         <input
-          style={inputStyles}
+          className={styles.input}
           type="text"
           id="technologies"
           name="technologies"
@@ -125,9 +88,9 @@ const AddProjectForm = ({ onSubmit, onCancel }) => {
           required
         />
       </div>
-      <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
-        <button type="button" style={{ ...buttonStyles, background: '#ccc', color: '#333' }} onClick={onCancel}>Cancel</button>
-        <button type="submit" style={buttonStyles}>Add Project</button>
+      <div className={styles.buttonRow}>
+        <button type="button" className={styles.cancelButton} onClick={onCancel}>Cancel</button>
+        <button type="submit" className={styles.submitButton}>Add Project</button>
       </div>
     </form>
   );
