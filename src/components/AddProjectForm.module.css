@@ -92,6 +92,15 @@
   .form {
     max-width: 98vw;
     padding: 0.5rem;
+    gap: 1.7rem;
+    margin-bottom: 1.5rem;
+  }
+  .label {
+    font-size: 0.97rem;
+  }
+  .input, .textarea {
+    font-size: 0.97rem;
+    padding: 0.8rem;
   }
   .buttonRow {
     flex-direction: column;
