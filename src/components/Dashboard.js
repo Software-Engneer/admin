@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { useAuth } from './AuthContext';
 import styles from './Dashboard.module.css';
+import Modal from './Modal';
+import AddProjectForm from './AddProjectForm';
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
   const [activeSection, setActiveSection] = useState('overview');
   const [openMenu, setOpenMenu] = useState(null);
+  const [isAddProjectOpen, setAddProjectOpen] = useState(false);
 
   const handleMenuToggle = (id) => {
     setOpenMenu(openMenu === id ? null : id);
@@ -14,6 +17,12 @@ const Dashboard = () => {
   const handleMenuAction = (action, itemId) => {
     console.log(`${action} action for item ${itemId}`);
     setOpenMenu(null);
+  };
+
+  const handleAddProject = (formData) => {
+    // For now, just close the modal. You can add saving logic later.
+    setAddProjectOpen(false);
+    // Optionally, show a success message or update state.
   };
 
   const ActionMenu = ({ itemId, itemName }) => (
@@ -71,7 +80,7 @@ const Dashboard = () => {
     <section className={styles.section}>
       <h2>Manage Projects</h2>
       <div className={styles.actionBar}>
-        <button className={styles.addButton}>Add New Project</button>
+        <button className={styles.addButton} onClick={() => setAddProjectOpen(true)}>Add New Project</button>
       </div>
       <div className={styles.tableContainer}>
         <table className={styles.table}>
@@ -111,6 +120,10 @@ const Dashboard = () => {
           </tbody>
         </table>
       </div>
+      <Modal isOpen={isAddProjectOpen} onClose={() => setAddProjectOpen(false)}>
+        <h2 style={{marginTop:0}}>Add New Project</h2>
+        <AddProjectForm onSubmit={handleAddProject} onCancel={() => setAddProjectOpen(false)} />
+      </Modal>
     </section>
   );
 
