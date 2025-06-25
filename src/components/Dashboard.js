@@ -3,12 +3,14 @@ import { useAuth } from './AuthContext';
 import styles from './Dashboard.module.css';
 import Modal from './Modal';
 import AddProjectForm from './AddProjectForm';
+import AddCreativeForm from './AddCreativeForm';
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
   const [activeSection, setActiveSection] = useState('overview');
   const [openMenu, setOpenMenu] = useState(null);
   const [isAddProjectOpen, setAddProjectOpen] = useState(false);
+  const [isAddCreativeOpen, setAddCreativeOpen] = useState(false);
 
   const handleMenuToggle = (id) => {
     setOpenMenu(openMenu === id ? null : id);
@@ -23,6 +25,10 @@ const Dashboard = () => {
     // For now, just close the modal. You can add saving logic later.
     setAddProjectOpen(false);
     // Optionally, show a success message or update state.
+  };
+
+  const handleAddCreative = (formData) => {
+    setAddCreativeOpen(false);
   };
 
   const ActionMenu = ({ itemId, itemName }) => (
@@ -131,7 +137,7 @@ const Dashboard = () => {
     <section className={styles.section}>
       <h2>Manage Creative Works</h2>
       <div className={styles.actionBar}>
-        <button className={styles.addButton}>Add New Creative Work</button>
+        <button className={styles.addButton} onClick={() => setAddCreativeOpen(true)}>Add New Creative Work</button>
       </div>
       <div className={styles.tableContainer}>
         <table className={styles.table}>
@@ -171,6 +177,10 @@ const Dashboard = () => {
           </tbody>
         </table>
       </div>
+      <Modal isOpen={isAddCreativeOpen} onClose={() => setAddCreativeOpen(false)}>
+        <h2 style={{marginTop:0}}>Add New Creative Work</h2>
+        <AddCreativeForm onSubmit={handleAddCreative} onCancel={() => setAddCreativeOpen(false)} />
+      </Modal>
     </section>
   );
 
