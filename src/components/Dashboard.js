@@ -11,6 +11,7 @@ const Dashboard = () => {
   const [openMenu, setOpenMenu] = useState(null);
   const [isAddProjectOpen, setAddProjectOpen] = useState(false);
   const [isAddCreativeOpen, setAddCreativeOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const handleMenuToggle = (id) => {
     setOpenMenu(openMenu === id ? null : id);
@@ -225,6 +226,15 @@ const Dashboard = () => {
   return (
     <div className={styles.dashboard}>
       <header className={styles.header}>
+        <button
+          className={styles.hamburger}
+          onClick={() => setSidebarOpen(true)}
+          aria-label="Open navigation menu"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
         <h1>Admin Dashboard</h1>
         <div className={styles.userInfo}>
           <span>Welcome, {user?.name}</span>
@@ -233,39 +243,62 @@ const Dashboard = () => {
           </button>
         </div>
       </header>
-      
       <div className={styles.content}>
-        <div className={styles.sidebar}>
+        {sidebarOpen && (
+          <div
+            className={styles.sidebarOverlay}
+            onClick={() => setSidebarOpen(false)}
+            aria-label="Close navigation menu"
+          />
+        )}
+        <div
+          className={
+            styles.sidebar +
+            (sidebarOpen ? ' ' + styles.sidebarOpen : '')
+          }
+        >
           <nav>
             <ul>
               <li>
-                <button 
+                <button
                   className={`${styles.navButton} ${activeSection === 'overview' ? styles.active : ''}`}
-                  onClick={() => setActiveSection('overview')}
+                  onClick={() => {
+                    setActiveSection('overview');
+                    setSidebarOpen(false);
+                  }}
                 >
                   Overview
                 </button>
               </li>
               <li>
-                <button 
+                <button
                   className={`${styles.navButton} ${activeSection === 'projects' ? styles.active : ''}`}
-                  onClick={() => setActiveSection('projects')}
+                  onClick={() => {
+                    setActiveSection('projects');
+                    setSidebarOpen(false);
+                  }}
                 >
                   Projects
                 </button>
               </li>
               <li>
-                <button 
+                <button
                   className={`${styles.navButton} ${activeSection === 'creative' ? styles.active : ''}`}
-                  onClick={() => setActiveSection('creative')}
+                  onClick={() => {
+                    setActiveSection('creative');
+                    setSidebarOpen(false);
+                  }}
                 >
                   Creative Works
                 </button>
               </li>
               <li>
-                <button 
+                <button
                   className={`${styles.navButton} ${activeSection === 'settings' ? styles.active : ''}`}
-                  onClick={() => setActiveSection('settings')}
+                  onClick={() => {
+                    setActiveSection('settings');
+                    setSidebarOpen(false);
+                  }}
                 >
                   Settings
                 </button>
@@ -273,7 +306,6 @@ const Dashboard = () => {
             </ul>
           </nav>
         </div>
-        
         <main className={styles.mainContent}>
           {renderContent()}
         </main>
