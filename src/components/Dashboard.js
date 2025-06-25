@@ -5,6 +5,43 @@ import styles from './Dashboard.module.css';
 const Dashboard = () => {
   const { user, logout } = useAuth();
   const [activeSection, setActiveSection] = useState('overview');
+  const [openMenu, setOpenMenu] = useState(null);
+
+  const handleMenuToggle = (id) => {
+    setOpenMenu(openMenu === id ? null : id);
+  };
+
+  const handleMenuAction = (action, itemId) => {
+    console.log(`${action} action for item ${itemId}`);
+    setOpenMenu(null);
+  };
+
+  const ActionMenu = ({ itemId, itemName }) => (
+    <div className={styles.actionMenuContainer}>
+      <button 
+        className={styles.menuToggle}
+        onClick={() => handleMenuToggle(itemId)}
+      >
+        ⋯
+      </button>
+      {openMenu === itemId && (
+        <div className={styles.actionMenu}>
+          <button 
+            className={styles.menuItem}
+            onClick={() => handleMenuAction('edit', itemId)}
+          >
+            Edit
+          </button>
+          <button 
+            className={styles.menuItem}
+            onClick={() => handleMenuAction('delete', itemId)}
+          >
+            Delete
+          </button>
+        </div>
+      )}
+    </div>
+  );
 
   const renderOverview = () => (
     <section className={styles.section}>
@@ -52,8 +89,7 @@ const Dashboard = () => {
               <td>Web Development</td>
               <td><span className={styles.statusActive}>Active</span></td>
               <td>
-                <button className={styles.actionButton}>Edit</button>
-                <button className={styles.actionButtonDelete}>Delete</button>
+                <ActionMenu itemId="project-1" itemName="E-commerce Website" />
               </td>
             </tr>
             <tr>
@@ -61,8 +97,15 @@ const Dashboard = () => {
               <td>UI/UX Design</td>
               <td><span className={styles.statusActive}>Active</span></td>
               <td>
-                <button className={styles.actionButton}>Edit</button>
-                <button className={styles.actionButtonDelete}>Delete</button>
+                <ActionMenu itemId="project-2" itemName="Mobile App Design" />
+              </td>
+            </tr>
+            <tr>
+              <td>Portfolio Website</td>
+              <td>Web Development</td>
+              <td><span className={styles.statusActive}>Active</span></td>
+              <td>
+                <ActionMenu itemId="project-3" itemName="Portfolio Website" />
               </td>
             </tr>
           </tbody>
@@ -93,8 +136,7 @@ const Dashboard = () => {
               <td>Digital Art</td>
               <td><span className={styles.statusActive}>Active</span></td>
               <td>
-                <button className={styles.actionButton}>Edit</button>
-                <button className={styles.actionButtonDelete}>Delete</button>
+                <ActionMenu itemId="creative-1" itemName="Digital Art Collection" />
               </td>
             </tr>
             <tr>
@@ -102,8 +144,15 @@ const Dashboard = () => {
               <td>Branding</td>
               <td><span className={styles.statusActive}>Active</span></td>
               <td>
-                <button className={styles.actionButton}>Edit</button>
-                <button className={styles.actionButtonDelete}>Delete</button>
+                <ActionMenu itemId="creative-2" itemName="Brand Identity Design" />
+              </td>
+            </tr>
+            <tr>
+              <td>Illustration Series</td>
+              <td>Illustration</td>
+              <td><span className={styles.statusActive}>Active</span></td>
+              <td>
+                <ActionMenu itemId="creative-3" itemName="Illustration Series" />
               </td>
             </tr>
           </tbody>
