@@ -309,6 +309,13 @@
   z-index: 1000;
   min-width: 120px;
   overflow: hidden;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.actionMenu.upwards {
+  top: auto;
+  bottom: 100%;
 }
 
 .menuItem {

@@ -213,7 +213,7 @@ const Dashboard = () => {
     }
   };
 
-  const ActionMenu = ({ itemId, itemName, itemType }) => (
+  const ActionMenu = ({ itemId, itemName, itemType, upwards }) => (
     <div className={styles.actionMenuContainer}>
       <button 
         className={styles.menuToggle}
@@ -222,7 +222,7 @@ const Dashboard = () => {
         ⋯
       </button>
       {openMenu === itemId && (
-        <div className={styles.actionMenu}>
+        <div className={styles.actionMenu + (upwards ? ' ' + styles.upwards : '')}>
           <button 
             className={styles.menuItem}
             onClick={() => handleMenuAction('edit', itemId, itemType)}
@@ -281,8 +281,9 @@ const Dashboard = () => {
                   <td colSpan={columns.length + 1} className={styles.noData}>No {title.toLowerCase()} found</td>
                 </tr>
               ) : (
-                items.map((item) => {
+                items.map((item, idx) => {
                   const rowData = getRowData(item);
+                  const isLast = idx === items.length - 1;
                   return (
                     <tr key={item._id || item.id}>
                       {rowData.map((cell, idx) => <td key={idx}>{cell}</td>)}
@@ -291,6 +292,7 @@ const Dashboard = () => {
                           itemId={item._id || item.id} 
                           itemName={item.title} 
                           itemType={itemType}
+                          upwards={isLast}
                         />
                       </td>
                     </tr>
