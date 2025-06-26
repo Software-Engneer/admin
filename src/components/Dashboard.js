@@ -240,89 +240,82 @@ const Dashboard = () => {
     </div>
   );
 
-  const renderOverview = () => (
+  const renderTableSection = ({
+    title,
+    addButtonLabel,
+    onAddClick,
+    loading,
+    items,
+    columns,
+    itemType,
+    getRowData,
+    isAddOpen,
+    setAddOpen,
+    isEditOpen,
+    setEditOpen,
+    editingItem,
+    setEditingItem,
+    EditFormComponent,
+    handleAdd,
+    handleEdit,
+  }) => (
     <section className={styles.section}>
-      <h2>Overview</h2>
-      <div className={styles.stats}>
-        <div className={styles.statCard}>
-          <h3>Total Projects</h3>
-          <p>{loading.stats ? '...' : stats.totalProjects}</p>
-        </div>
-        <div className={styles.statCard}>
-          <h3>Creative Works</h3>
-          <p>{loading.stats ? '...' : stats.totalCreativeWorks}</p>
-        </div>
-        <div className={styles.statCard}>
-          <h3>Total Views</h3>
-          <p>{loading.stats ? '...' : stats.totalViews}</p>
-        </div>
-        <div className={styles.statCard}>
-          <h3>Messages</h3>
-          <p>{loading.stats ? '...' : stats.totalMessages}</p>
-        </div>
-      </div>
-    </section>
-  );
-
-  const renderProjects = () => (
-    <section className={styles.section}>
-      <h2>Manage Projects</h2>
+      <h2>{title}</h2>
       <div className={styles.actionBar}>
-        <button className={styles.addButton} onClick={() => setAddProjectOpen(true)}>Add New Project</button>
+        <button className={styles.addButton} onClick={onAddClick}>{addButtonLabel}</button>
       </div>
       <div className={styles.tableContainer}>
-        {loading.projects ? (
-          <div className={styles.loading}>Loading projects...</div>
+        {loading ? (
+          <div className={styles.loading}>Loading {title.toLowerCase()}...</div>
         ) : (
           <table className={styles.table}>
             <thead>
               <tr>
-                <th>Title</th>
-                <th>Technologies</th>
-                <th>Status</th>
+                {columns.map((col) => <th key={col}>{col}</th>)}
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {projects.length === 0 ? (
+              {items.length === 0 ? (
                 <tr>
-                  <td colSpan="4" className={styles.noData}>No projects found</td>
+                  <td colSpan={columns.length + 1} className={styles.noData}>No {title.toLowerCase()} found</td>
                 </tr>
               ) : (
-                projects.map((project) => (
-                  <tr key={project.id}>
-                    <td>{project.title}</td>
-                    <td>{Array.isArray(project.technologies) ? project.technologies.join(', ') : project.technologies}</td>
-                    <td><span className={styles.statusActive}>Active</span></td>
-                    <td>
-                      <ActionMenu 
-                        itemId={project.id} 
-                        itemName={project.title} 
-                        itemType="project"
-                      />
-                    </td>
-                  </tr>
-                ))
+                items.map((item) => {
+                  const rowData = getRowData(item);
+                  return (
+                    <tr key={item._id || item.id}>
+                      {rowData.map((cell, idx) => <td key={idx}>{cell}</td>)}
+                      <td>
+                        <ActionMenu 
+                          itemId={item._id || item.id} 
+                          itemName={item.title} 
+                          itemType={itemType}
+                        />
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>
         )}
       </div>
-      <Modal isOpen={isAddProjectOpen} onClose={() => setAddProjectOpen(false)}>
-        <h2 style={{marginTop:0}}>Add New Project</h2>
-        <EditProjectForm onSubmit={handleAddProject} onCancel={() => setAddProjectOpen(false)} />
+      <Modal isOpen={isAddOpen} onClose={() => setAddOpen(false)}>
+        <h2 style={{marginTop:0}}>{addButtonLabel}</h2>
+        <EditFormComponent onSubmit={handleAdd} onCancel={() => setAddOpen(false)} />
       </Modal>
-      <Modal isOpen={isEditProjectOpen} onClose={() => {
-        setEditProjectOpen(false);
-        setEditingProject(null);
+      <Modal isOpen={isEditOpen} onClose={() => {
+        setEditOpen(false);
+        setEditingItem(null);
       }}>
-        <h2 style={{marginTop:0}}>Edit Project</h2>
-        <EditProjectForm 
-          project={editingProject}
-          onSubmit={handleEditProject} 
+        <h2 style={{marginTop:0}}>Edit {title.slice(0, -1)}</h2>
+        <EditFormComponent 
+          {...{ [itemType]: editingItem }}
+          onSubmit={handleEdit} 
           onCancel={() => {
-            setEditProjectOpen(false);
-            setEditingProject(null);
+            setEditOpen(false);
+            setEditingItem(null);
           }}
           isEditing={true}
         />
@@ -330,71 +323,53 @@ const Dashboard = () => {
     </section>
   );
 
-  const renderCreative = () => (
-    <section className={styles.section}>
-      <h2>Manage Creative Works</h2>
-      <div className={styles.actionBar}>
-        <button className={styles.addButton} onClick={() => setAddCreativeOpen(true)}>Add New Creative Work</button>
-      </div>
-      <div className={styles.tableContainer}>
-        {loading.creative ? (
-          <div className={styles.loading}>Loading creative works...</div>
-        ) : (
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th>Mediums</th>
-                <th>Status</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {creativeWorks.length === 0 ? (
-                <tr>
-                  <td colSpan="4" className={styles.noData}>No creative works found</td>
-                </tr>
-              ) : (
-                creativeWorks.map((creative) => (
-                  <tr key={creative._id}>
-                    <td>{creative.title}</td>
-                    <td>{creative.mediums}</td>
-                    <td><span className={styles.statusActive}>Active</span></td>
-                    <td>
-                      <ActionMenu 
-                        itemId={creative._id} 
-                        itemName={creative.title} 
-                        itemType="creative"
-                      />
-                    </td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        )}
-      </div>
-      <Modal isOpen={isAddCreativeOpen} onClose={() => setAddCreativeOpen(false)}>
-        <h2 style={{marginTop:0}}>Add New Creative Work</h2>
-        <EditCreativeForm onSubmit={handleAddCreative} onCancel={() => setAddCreativeOpen(false)} />
-      </Modal>
-      <Modal isOpen={isEditCreativeOpen} onClose={() => {
-        setEditCreativeOpen(false);
-        setEditingCreative(null);
-      }}>
-        <h2 style={{marginTop:0}}>Edit Creative Work</h2>
-        <EditCreativeForm 
-          creative={editingCreative}
-          onSubmit={handleEditCreative} 
-          onCancel={() => {
-            setEditCreativeOpen(false);
-            setEditingCreative(null);
-          }}
-          isEditing={true}
-        />
-      </Modal>
-    </section>
-  );
+  const renderProjects = () => renderTableSection({
+    title: 'Projects',
+    addButtonLabel: 'Add New Project',
+    onAddClick: () => setAddProjectOpen(true),
+    loading: loading.projects,
+    items: projects,
+    columns: ['Title', 'Technologies', 'Status'],
+    itemType: 'project',
+    getRowData: (project) => [
+      project.title,
+      Array.isArray(project.technologies) ? project.technologies.join(', ') : project.technologies,
+      <span className={styles.statusActive}>Active</span>,
+    ],
+    isAddOpen: isAddProjectOpen,
+    setAddOpen: setAddProjectOpen,
+    isEditOpen: isEditProjectOpen,
+    setEditOpen: setEditProjectOpen,
+    editingItem: editingProject,
+    setEditingItem: setEditingProject,
+    EditFormComponent: EditProjectForm,
+    handleAdd: handleAddProject,
+    handleEdit: handleEditProject,
+  });
+
+  const renderCreative = () => renderTableSection({
+    title: 'Creative Works',
+    addButtonLabel: 'Add New Creative Work',
+    onAddClick: () => setAddCreativeOpen(true),
+    loading: loading.creative,
+    items: creativeWorks,
+    columns: ['Title', 'Mediums', 'Status'],
+    itemType: 'creative',
+    getRowData: (creative) => [
+      creative.title,
+      creative.mediums,
+      <span className={styles.statusActive}>Active</span>,
+    ],
+    isAddOpen: isAddCreativeOpen,
+    setAddOpen: setAddCreativeOpen,
+    isEditOpen: isEditCreativeOpen,
+    setEditOpen: setEditCreativeOpen,
+    editingItem: editingCreative,
+    setEditingItem: setEditingCreative,
+    EditFormComponent: EditCreativeForm,
+    handleAdd: handleAddCreative,
+    handleEdit: handleEditCreative,
+  });
 
   const renderMessages = () => (
     <section className={styles.section}>
