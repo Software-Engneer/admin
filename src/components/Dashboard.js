@@ -290,13 +290,13 @@ const Dashboard = () => {
                 </tr>
               ) : (
                 projects.map((project) => (
-                  <tr key={project._id}>
+                  <tr key={project.id}>
                     <td>{project.title}</td>
                     <td>{Array.isArray(project.technologies) ? project.technologies.join(', ') : project.technologies}</td>
                     <td><span className={styles.statusActive}>Active</span></td>
                     <td>
                       <ActionMenu 
-                        itemId={project._id} 
+                        itemId={project.id} 
                         itemName={project.title} 
                         itemType="project"
                       />
