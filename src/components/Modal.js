@@ -6,43 +6,44 @@ const modalStyles = {
   left: 0,
   width: '100vw',
   height: '100vh',
-  background: 'rgba(0,0,0,0.2)',
+  background: 'rgba(0,0,0,0.1)',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   zIndex: 1000,
-  backdropFilter: 'blur(2px)',
+  backdropFilter: 'blur(3px)',
 };
 
 const contentStyles = {
-  background: 'rgba(255, 255, 255, 0.95)',
-  borderRadius: '16px',
-  padding: '2.5rem',
-  maxWidth: '90vw',
+  background: 'rgba(255, 255, 255, 0.85)',
+  borderRadius: '20px',
+  padding: '3rem',
+  maxWidth: '85vw',
   width: '100%',
-  maxHeight: '85vh',
+  maxHeight: '80vh',
   overflowY: 'auto',
   position: 'relative',
-  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.1)',
-  border: '1px solid rgba(255, 255, 255, 0.2)',
-  backdropFilter: 'blur(10px)',
+  boxShadow: '0 12px 40px rgba(0, 0, 0, 0.08)',
+  border: '1px solid rgba(255, 255, 255, 0.3)',
+  backdropFilter: 'blur(15px)',
 };
 
 const closeBtnStyles = {
   position: 'absolute',
-  top: '1rem',
-  right: '1rem',
-  background: 'rgba(255, 255, 255, 0.8)',
+  top: '1.2rem',
+  right: '1.2rem',
+  background: 'rgba(255, 255, 255, 0.6)',
   border: 'none',
   fontSize: '1.5rem',
   cursor: 'pointer',
   borderRadius: '50%',
-  width: '32px',
-  height: '32px',
+  width: '36px',
+  height: '36px',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   transition: 'all 0.3s ease',
+  backdropFilter: 'blur(10px)',
 };
 
 const Modal = ({ isOpen, onClose, children }) => {
@@ -55,11 +56,11 @@ const Modal = ({ isOpen, onClose, children }) => {
           onClick={onClose} 
           aria-label="Close modal"
           onMouseEnter={(e) => {
-            e.target.style.background = 'rgba(255, 255, 255, 1)';
+            e.target.style.background = 'rgba(255, 255, 255, 0.9)';
             e.target.style.transform = 'scale(1.1)';
           }}
           onMouseLeave={(e) => {
-            e.target.style.background = 'rgba(255, 255, 255, 0.8)';
+            e.target.style.background = 'rgba(255, 255, 255, 0.6)';
             e.target.style.transform = 'scale(1)';
           }}
         >
