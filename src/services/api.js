@@ -55,7 +55,8 @@ class ApiService {
 
   // Projects API
   async getProjects() {
-    return this.request('/projects');
+    const data = await this.request('/projects');
+    return Array.isArray(data) ? data : data.projects || [];
   }
 
   async getProject(id) {
@@ -117,7 +118,8 @@ class ApiService {
 
   // Creative Works API
   async getCreativeWorks() {
-    return this.request('/creative');
+    const data = await this.request('/creative');
+    return Array.isArray(data) ? data : data.works || [];
   }
 
   async getCreativeWork(id) {
