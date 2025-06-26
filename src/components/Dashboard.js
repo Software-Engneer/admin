@@ -292,7 +292,7 @@ const Dashboard = () => {
                 projects.map((project) => (
                   <tr key={project._id}>
                     <td>{project.title}</td>
-                    <td>{project.technologies}</td>
+                    <td>{Array.isArray(project.technologies) ? project.technologies.join(', ') : project.technologies}</td>
                     <td><span className={styles.statusActive}>Active</span></td>
                     <td>
                       <ActionMenu 
