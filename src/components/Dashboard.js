@@ -286,72 +286,76 @@ const Dashboard = () => {
     EditFormComponent,
     handleAdd,
     handleEdit,
-  }) => (
-    <section className={styles.section}>
-      <h2>{title}</h2>
-      <div className={styles.actionBar}>
-        <button className={styles.addButton} onClick={onAddClick}>{addButtonLabel}</button>
-      </div>
-      <div className={styles.tableContainer}>
-        {loading ? (
-          <div className={styles.loading}>Loading {title.toLowerCase()}...</div>
-        ) : (
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                {columns.map((col) => <th key={col}>{col}</th>)}
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {items.length === 0 ? (
+  }) => {
+    // Defensive: ensure items is always an array
+    items = Array.isArray(items) ? items : [];
+    return (
+      <section className={styles.section}>
+        <h2>{title}</h2>
+        <div className={styles.actionBar}>
+          <button className={styles.addButton} onClick={onAddClick}>{addButtonLabel}</button>
+        </div>
+        <div className={styles.tableContainer}>
+          {loading ? (
+            <div className={styles.loading}>Loading {title.toLowerCase()}...</div>
+          ) : (
+            <table className={styles.table}>
+              <thead>
                 <tr>
-                  <td colSpan={columns.length + 1} className={styles.noData}>No {title.toLowerCase()} found</td>
+                  {columns.map((col) => <th key={col}>{col}</th>)}
+                  <th>Actions</th>
                 </tr>
-              ) : (
-                items.map((item, idx) => {
-                  const rowData = getRowData(item);
-                  const isLast = idx === items.length - 1;
-                  return (
-                    <tr key={item._id || item.id}>
-                      {rowData.map((cell, idx) => <td key={idx}>{cell}</td>)}
-                      <td>
-                        <ActionMenu 
-                          itemId={item._id || item.id} 
-                          itemName={item.title} 
-                          itemType={itemType}
-                          upwards={isLast}
-                        />
-                      </td>
-                    </tr>
-                  );
-                })
-              )}
-            </tbody>
-          </table>
-        )}
-      </div>
-      <Modal isOpen={isAddOpen} onClose={() => setAddOpen(false)}>
-        <h2 style={{marginTop:0}}>{addButtonLabel}</h2>
-        <EditFormComponent onSubmit={handleAdd} onCancel={() => setAddOpen(false)} />
-      </Modal>
-      <Modal isOpen={isEditOpen} onClose={() => {
-        setEditOpen(false);
-        setEditingItem(null);
-      }}>
-        <h2 style={{marginTop:0}}>Edit {title.slice(0, -1)}</h2>
-        <EditFormComponent 
-          {...{ [itemType]: editingItem }}
-          onSubmit={handleEdit} 
-          onCancel={() => {
-            setEditOpen(false);
-            setEditingItem(null);
-          }}
-          isEditing={true}
-        />
-      </Modal>
-    </section>
-  );
+              </thead>
+              <tbody>
+                {items.length === 0 ? (
+                  <tr>
+                    <td colSpan={columns.length + 1} className={styles.noData}>No {title.toLowerCase()} found</td>
+                  </tr>
+                ) : (
+                  items.map((item, idx) => {
+                    const rowData = getRowData(item);
+                    const isLast = idx === items.length - 1;
+                    return (
+                      <tr key={item._id || item.id}>
+                        {rowData.map((cell, idx) => <td key={idx}>{cell}</td>)}
+                        <td>
+                          <ActionMenu 
+                            itemId={item._id || item.id} 
+                            itemName={item.title} 
+                            itemType={itemType}
+                            upwards={isLast}
+                          />
+                        </td>
+                      </tr>
+                    );
+                  })
+                )}
+              </tbody>
+            </table>
+          )}
+        </div>
+        <Modal isOpen={isAddOpen} onClose={() => setAddOpen(false)}>
+          <h2 style={{marginTop:0}}>{addButtonLabel}</h2>
+          <EditFormComponent onSubmit={handleAdd} onCancel={() => setAddOpen(false)} />
+        </Modal>
+        <Modal isOpen={isEditOpen} onClose={() => {
+          setEditOpen(false);
+          setEditingItem(null);
+        }}>
+          <h2 style={{marginTop:0}}>Edit {title.slice(0, -1)}</h2>
+          <EditFormComponent 
+            {...{ [itemType]: editingItem }}
+            onSubmit={handleEdit} 
+            onCancel={() => {
+              setEditOpen(false);
+              setEditingItem(null);
+            }}
+            isEditing={true}
+          />
+        </Modal>
+      </section>
+    );
+  };
 
   const renderProjects = () => {
     console.log('Current projects state:', projects);
