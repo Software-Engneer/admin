@@ -158,6 +158,7 @@
   overflow-x: auto;
   margin: 2rem 0;
   padding: 0 1rem;
+  position: relative;
 }
 
 .table {
@@ -189,6 +190,12 @@
 
 .table tr:last-child td {
   border-bottom: none;
+}
+
+/* Ensure the actions column allows overflow */
+.table td:last-child {
+  position: relative;
+  overflow: visible;
 }
 
 .statusActive {

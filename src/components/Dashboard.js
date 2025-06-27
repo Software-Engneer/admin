@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useAuth } from './AuthContext';
 import styles from './Dashboard.module.css';
 import Modal from './Modal';
@@ -477,29 +478,54 @@ const Dashboard = () => {
   };
 
   const ActionMenu = ({ itemId, itemName, itemType, upwards }) => {
+    const [menuPosition, setMenuPosition] = useState(null);
+    const [buttonRef, setButtonRef] = useState(null);
+
     const handleToggle = () => {
       console.log('Menu toggle clicked for:', itemId, 'Current openMenu:', openMenu);
-      handleMenuToggle(itemId);
+      
+      if (openMenu === itemId) {
+        setOpenMenu(null);
+        setMenuPosition(null);
+      } else {
+        setOpenMenu(itemId);
+        // Calculate position for the menu
+        if (buttonRef) {
+          const rect = buttonRef.getBoundingClientRect();
+          setMenuPosition({
+            top: rect.bottom + window.scrollY,
+            left: rect.right - 120, // 120px is min-width of menu
+            width: 120
+          });
+        }
+      }
     };
 
     console.log('ActionMenu render - itemId:', itemId, 'openMenu:', openMenu, 'isOpen:', openMenu === itemId);
 
     return (
-      <div className={styles.actionMenuContainer}>
-        <button 
-          className={styles.menuToggle}
-          onClick={handleToggle}
-          style={{ border: '1px solid red' }} // Debug styling
-        >
-          ⋯
-        </button>
-        {openMenu === itemId && (
+      <>
+        <div className={styles.actionMenuContainer}>
+          <button 
+            ref={setButtonRef}
+            className={styles.menuToggle}
+            onClick={handleToggle}
+            style={{ border: '1px solid red' }} // Debug styling
+          >
+            ⋯
+          </button>
+        </div>
+        
+        {openMenu === itemId && menuPosition && createPortal(
           <div 
             className={styles.actionMenu + (upwards ? ' ' + styles.upwards : '')}
             style={{ 
+              position: 'absolute',
+              top: menuPosition.top,
+              left: menuPosition.left,
+              width: menuPosition.width,
               border: '2px solid blue',
               backgroundColor: 'white',
-              position: 'absolute',
               zIndex: 9999
             }}
           >
@@ -515,9 +541,10 @@ const Dashboard = () => {
             >
               Delete
             </button>
-          </div>
+          </div>,
+          document.body
         )}
-      </div>
+      </>
     );
   };
 
