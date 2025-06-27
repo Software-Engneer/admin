@@ -45,6 +45,9 @@ const Dashboard = () => {
   // Notification state
   const [notification, setNotification] = useState(null);
 
+  // Add status state to track status for each item
+  const [itemStatuses, setItemStatuses] = useState({});
+
   // Show notification helper
   const showNotification = (message, type = 'info') => {
     setNotification({ message, type });
@@ -227,26 +230,17 @@ const Dashboard = () => {
     }
   };
 
-  // Add status toggle handler after handleDeleteMessage
-  const handleStatusToggle = async (itemId, itemType, currentStatus) => {
-    try {
-      const newStatus = currentStatus === 'Active' ? 'Inactive' : 'Active';
-      
-      if (itemType === 'project') {
-        // Update project status in the API
-        await apiService.updateProject(itemId, { status: newStatus });
-        showNotification(`Project status updated to ${newStatus}`, 'success');
-        loadProjects();
-      } else if (itemType === 'creative') {
-        // Update creative work status in the API
-        await apiService.updateCreativeWork(itemId, { status: newStatus });
-        showNotification(`Creative work status updated to ${newStatus}`, 'success');
-        loadCreativeWorks();
-      }
-    } catch (error) {
-      showNotification('Failed to update status', 'error');
-      console.error('Error updating status:', error);
-    }
+  // Update status toggle handler to use local state only
+  const handleStatusToggle = (itemId, itemType) => {
+    const currentStatus = itemStatuses[itemId] || 'Active';
+    const newStatus = currentStatus === 'Active' ? 'Inactive' : 'Active';
+    
+    setItemStatuses(prev => ({
+      ...prev,
+      [itemId]: newStatus
+    }));
+    
+    showNotification(`Status updated to ${newStatus}`, 'success');
   };
 
   const renderOverview = () => (
@@ -367,13 +361,13 @@ const Dashboard = () => {
     columns: ['Title', 'Technologies', 'Status'],
     itemType: 'project',
     getRowData: (project) => [
-      project.title,
-      Array.isArray(project.technologies) ? project.technologies.join(', ') : project.technologies,
+      project.title || project.name || 'Untitled',
+      Array.isArray(project.technologies) ? project.technologies.join(', ') : (project.technologies || project.tech || 'N/A'),
       <button 
-        className={project.status === 'Inactive' ? styles.statusInactive : styles.statusActive}
-        onClick={() => handleStatusToggle(project._id || project.id, 'project', project.status || 'Active')}
+        className={itemStatuses[project._id || project.id] === 'Inactive' ? styles.statusInactive : styles.statusActive}
+        onClick={() => handleStatusToggle(project._id || project.id, 'project')}
       >
-        {project.status || 'Active'}
+        {itemStatuses[project._id || project.id] || 'Active'}
       </button>,
     ],
     isAddOpen: isAddProjectOpen,
@@ -396,13 +390,13 @@ const Dashboard = () => {
     columns: ['Title', 'Mediums', 'Status'],
     itemType: 'creative',
     getRowData: (creative) => [
-      creative.title,
-      creative.mediums,
+      creative.title || creative.name || 'Untitled',
+      creative.mediums || creative.medium || 'N/A',
       <button 
-        className={creative.status === 'Inactive' ? styles.statusInactive : styles.statusActive}
-        onClick={() => handleStatusToggle(creative._id, 'creative', creative.status || 'Active')}
+        className={itemStatuses[creative._id] === 'Inactive' ? styles.statusInactive : styles.statusActive}
+        onClick={() => handleStatusToggle(creative._id, 'creative')}
       >
-        {creative.status || 'Active'}
+        {itemStatuses[creative._id] || 'Active'}
       </button>,
     ],
     isAddOpen: isAddCreativeOpen,
