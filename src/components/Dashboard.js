@@ -489,19 +489,12 @@ const Dashboard = () => {
         <button 
           className={styles.menuToggle}
           onClick={handleToggle}
-          style={{ border: '1px solid red' }} // Debug styling
         >
           ⋯
         </button>
         {openMenu === itemId && (
           <div 
             className={styles.actionMenu + (upwards ? ' ' + styles.upwards : '')}
-            style={{ 
-              border: '2px solid blue',
-              backgroundColor: 'white',
-              position: 'absolute',
-              zIndex: 9999
-            }}
           >
             <button 
               className={styles.menuItem}
