@@ -355,6 +355,18 @@ const Dashboard = () => {
 
   const renderProjects = () => {
     console.log('Current projects state:', projects);
+    console.log('Projects type:', typeof projects);
+    console.log('Projects length:', projects?.length);
+    
+    if (!Array.isArray(projects)) {
+      console.error('Projects is not an array:', projects);
+      return (
+        <section className={styles.section}>
+          <h2>Projects</h2>
+          <div className={styles.loading}>Error: Invalid projects data</div>
+        </section>
+      );
+    }
     
     return renderTableSection({
       title: 'Projects',
@@ -366,11 +378,21 @@ const Dashboard = () => {
       itemType: 'project',
       getRowData: (project) => {
         console.log('Processing project:', project);
+        console.log('Project title:', project?.title);
+        console.log('Project technologies:', project?.technologies);
+        console.log('Project id:', project?.id);
+        
+        const title = project?.title || project?.name || 'No Title';
+        const technologies = Array.isArray(project?.technologies) 
+          ? project.technologies.join(', ') 
+          : (project?.technologies || project?.tech || 'No Technologies');
+        
+        console.log('Final title:', title);
+        console.log('Final technologies:', technologies);
+        
         return [
-          project?.title || 'No Title',
-          Array.isArray(project?.technologies) 
-            ? project.technologies.join(', ') 
-            : (project?.technologies || 'No Technologies'),
+          title,
+          technologies,
           <button 
             className={itemStatuses[project?.id] === 'Inactive' ? styles.statusInactive : styles.statusActive}
             onClick={() => handleStatusToggle(project?.id, 'project')}

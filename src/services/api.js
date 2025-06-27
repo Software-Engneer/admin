@@ -55,9 +55,28 @@ class ApiService {
 
   // Projects API
   async getProjects() {
-    const data = await this.request('/projects');
-    console.log('API response for projects:', data); // Debug log
-    return data.projects || [];
+    try {
+      const data = await this.request('/projects');
+      console.log('Raw API response for projects:', data); // Debug log
+      
+      // Handle different response structures
+      if (Array.isArray(data)) {
+        console.log('API returned array directly:', data);
+        return data;
+      } else if (data && data.projects && Array.isArray(data.projects)) {
+        console.log('API returned projects object:', data.projects);
+        return data.projects;
+      } else if (data && Array.isArray(data.data)) {
+        console.log('API returned data array:', data.data);
+        return data.data;
+      } else {
+        console.log('Unexpected API response structure:', data);
+        return [];
+      }
+    } catch (error) {
+      console.error('Error fetching projects:', error);
+      return [];
+    }
   }
 
   async getProject(id) {
