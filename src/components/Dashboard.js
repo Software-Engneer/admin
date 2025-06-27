@@ -102,6 +102,20 @@ const Dashboard = () => {
     }
   };
 
+  // Add useEffect for handling clicks outside menu
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (openMenu && !event.target.closest(`.${styles.actionMenuContainer}`)) {
+        setOpenMenu(null);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [openMenu]);
+
   // Load data on component mount
   useEffect(() => {
     loadProjects();
@@ -213,31 +227,28 @@ const Dashboard = () => {
     }
   };
 
-  const ActionMenu = ({ itemId, itemName, itemType, upwards }) => (
-    <div className={styles.actionMenuContainer}>
-      <button 
-        className={styles.menuToggle}
-        onClick={() => handleMenuToggle(itemId)}
-      >
-        ⋯
-      </button>
-      {openMenu === itemId && (
-        <div className={styles.actionMenu + (upwards ? ' ' + styles.upwards : '')}>
-          <button 
-            className={styles.menuItem}
-            onClick={() => handleMenuAction('edit', itemId, itemType)}
-          >
-            Edit
-          </button>
-          <button 
-            className={styles.menuItem}
-            onClick={() => handleMenuAction('delete', itemId, itemType)}
-          >
-            Delete
-          </button>
+  const renderOverview = () => (
+    <section className={styles.section}>
+      <h2>Overview</h2>
+      <div className={styles.stats}>
+        <div className={styles.statCard}>
+          <h3>Total Projects</h3>
+          <p>{loading.stats ? '...' : stats.totalProjects}</p>
         </div>
-      )}
-    </div>
+        <div className={styles.statCard}>
+          <h3>Creative Works</h3>
+          <p>{loading.stats ? '...' : stats.totalCreativeWorks}</p>
+        </div>
+        <div className={styles.statCard}>
+          <h3>Total Views</h3>
+          <p>{loading.stats ? '...' : stats.totalViews}</p>
+        </div>
+        <div className={styles.statCard}>
+          <h3>Messages</h3>
+          <p>{loading.stats ? '...' : stats.totalMessages}</p>
+        </div>
+      </div>
+    </section>
   );
 
   const renderTableSection = ({
@@ -463,6 +474,51 @@ const Dashboard = () => {
       default:
         return renderOverview();
     }
+  };
+
+  const ActionMenu = ({ itemId, itemName, itemType, upwards }) => {
+    const handleToggle = () => {
+      console.log('Menu toggle clicked for:', itemId, 'Current openMenu:', openMenu);
+      handleMenuToggle(itemId);
+    };
+
+    console.log('ActionMenu render - itemId:', itemId, 'openMenu:', openMenu, 'isOpen:', openMenu === itemId);
+
+    return (
+      <div className={styles.actionMenuContainer}>
+        <button 
+          className={styles.menuToggle}
+          onClick={handleToggle}
+          style={{ border: '1px solid red' }} // Debug styling
+        >
+          ⋯
+        </button>
+        {openMenu === itemId && (
+          <div 
+            className={styles.actionMenu + (upwards ? ' ' + styles.upwards : '')}
+            style={{ 
+              border: '2px solid blue',
+              backgroundColor: 'white',
+              position: 'absolute',
+              zIndex: 9999
+            }}
+          >
+            <button 
+              className={styles.menuItem}
+              onClick={() => handleMenuAction('edit', itemId, itemType)}
+            >
+              Edit
+            </button>
+            <button 
+              className={styles.menuItem}
+              onClick={() => handleMenuAction('delete', itemId, itemType)}
+            >
+              Delete
+            </button>
+          </div>
+        )}
+      </div>
+    );
   };
 
   return (
