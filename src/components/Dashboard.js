@@ -446,57 +446,61 @@ const Dashboard = () => {
     handleEdit: handleEditCreative,
   });
 
-  const renderMessages = () => (
-    <section className={styles.section}>
-      <h2>Contact Messages</h2>
-      <div className={styles.tableContainer}>
-        {loading.messages ? (
-          <div className={styles.loading}>Loading messages...</div>
-        ) : (
-          <table className={styles.table}>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Message</th>
-                <th>Date</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {contactMessages.length === 0 ? (
+  const renderMessages = () => {
+    // Defensive: ensure contactMessages is always an array
+    const safeMessages = Array.isArray(contactMessages) ? contactMessages : [];
+    return (
+      <section className={styles.section}>
+        <h2>Contact Messages</h2>
+        <div className={styles.tableContainer}>
+          {loading.messages ? (
+            <div className={styles.loading}>Loading messages...</div>
+          ) : (
+            <table className={styles.table}>
+              <thead>
                 <tr>
-                  <td colSpan="5" className={styles.noData}>No messages found</td>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Message</th>
+                  <th>Date</th>
+                  <th>Actions</th>
                 </tr>
-              ) : (
-                contactMessages.map((message) => (
-                  <tr key={message._id}>
-                    <td>{message.name}</td>
-                    <td>{message.email}</td>
-                    <td className={styles.messageCell}>
-                      {message.message.length > 50 
-                        ? `${message.message.substring(0, 50)}...` 
-                        : message.message
-                      }
-                    </td>
-                    <td>{new Date(message.createdAt).toLocaleDateString()}</td>
-                    <td>
-                      <button 
-                        className={styles.deleteButton}
-                        onClick={() => handleDeleteMessage(message._id)}
-                      >
-                        Delete
-                      </button>
-                    </td>
+              </thead>
+              <tbody>
+                {safeMessages.length === 0 ? (
+                  <tr>
+                    <td colSpan="5" className={styles.noData}>No messages found</td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-        )}
-      </div>
-    </section>
-  );
+                ) : (
+                  safeMessages.map((message) => (
+                    <tr key={message._id}>
+                      <td>{message.name}</td>
+                      <td>{message.email}</td>
+                      <td className={styles.messageCell}>
+                        {message.message.length > 50 
+                          ? `${message.message.substring(0, 50)}...` 
+                          : message.message
+                        }
+                      </td>
+                      <td>{new Date(message.createdAt).toLocaleDateString()}</td>
+                      <td>
+                        <button 
+                          className={styles.deleteButton}
+                          onClick={() => handleDeleteMessage(message._id)}
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          )}
+        </div>
+      </section>
+    );
+  };
 
   const renderSettings = () => (
     <section className={styles.section}>
