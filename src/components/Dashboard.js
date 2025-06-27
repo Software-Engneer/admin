@@ -58,6 +58,7 @@ const Dashboard = () => {
     setLoading(prev => ({ ...prev, projects: true }));
     try {
       const data = await apiService.getProjects();
+      console.log('Projects data received:', data);
       setProjects(data);
     } catch (error) {
       showNotification('Failed to load projects', 'error');
@@ -352,34 +353,43 @@ const Dashboard = () => {
     </section>
   );
 
-  const renderProjects = () => renderTableSection({
-    title: 'Projects',
-    addButtonLabel: 'Add New Project',
-    onAddClick: () => setAddProjectOpen(true),
-    loading: loading.projects,
-    items: projects,
-    columns: ['Title', 'Technologies', 'Status'],
-    itemType: 'project',
-    getRowData: (project) => [
-      project.title || 'Untitled',
-      Array.isArray(project.technologies) ? project.technologies.join(', ') : (project.technologies || 'N/A'),
-      <button 
-        className={itemStatuses[project.id] === 'Inactive' ? styles.statusInactive : styles.statusActive}
-        onClick={() => handleStatusToggle(project.id, 'project')}
-      >
-        {itemStatuses[project.id] || 'Active'}
-      </button>,
-    ],
-    isAddOpen: isAddProjectOpen,
-    setAddOpen: setAddProjectOpen,
-    isEditOpen: isEditProjectOpen,
-    setEditOpen: setEditProjectOpen,
-    editingItem: editingProject,
-    setEditingItem: setEditingProject,
-    EditFormComponent: EditProjectForm,
-    handleAdd: handleAddProject,
-    handleEdit: handleEditProject,
-  });
+  const renderProjects = () => {
+    console.log('Current projects state:', projects);
+    
+    return renderTableSection({
+      title: 'Projects',
+      addButtonLabel: 'Add New Project',
+      onAddClick: () => setAddProjectOpen(true),
+      loading: loading.projects,
+      items: projects,
+      columns: ['Title', 'Technologies', 'Status'],
+      itemType: 'project',
+      getRowData: (project) => {
+        console.log('Processing project:', project);
+        return [
+          project?.title || 'No Title',
+          Array.isArray(project?.technologies) 
+            ? project.technologies.join(', ') 
+            : (project?.technologies || 'No Technologies'),
+          <button 
+            className={itemStatuses[project?.id] === 'Inactive' ? styles.statusInactive : styles.statusActive}
+            onClick={() => handleStatusToggle(project?.id, 'project')}
+          >
+            {itemStatuses[project?.id] || 'Active'}
+          </button>,
+        ];
+      },
+      isAddOpen: isAddProjectOpen,
+      setAddOpen: setAddProjectOpen,
+      isEditOpen: isEditProjectOpen,
+      setEditOpen: setEditProjectOpen,
+      editingItem: editingProject,
+      setEditingItem: setEditingProject,
+      EditFormComponent: EditProjectForm,
+      handleAdd: handleAddProject,
+      handleEdit: handleEditProject,
+    });
+  };
 
   const renderCreative = () => renderTableSection({
     title: 'Creative Works',

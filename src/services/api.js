@@ -56,6 +56,7 @@ class ApiService {
   // Projects API
   async getProjects() {
     const data = await this.request('/projects');
+    console.log('API response for projects:', data); // Debug log
     return data.projects || [];
   }
 
