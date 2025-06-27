@@ -227,6 +227,28 @@ const Dashboard = () => {
     }
   };
 
+  // Add status toggle handler after handleDeleteMessage
+  const handleStatusToggle = async (itemId, itemType, currentStatus) => {
+    try {
+      const newStatus = currentStatus === 'Active' ? 'Inactive' : 'Active';
+      
+      if (itemType === 'project') {
+        // Update project status in the API
+        await apiService.updateProject(itemId, { status: newStatus });
+        showNotification(`Project status updated to ${newStatus}`, 'success');
+        loadProjects();
+      } else if (itemType === 'creative') {
+        // Update creative work status in the API
+        await apiService.updateCreativeWork(itemId, { status: newStatus });
+        showNotification(`Creative work status updated to ${newStatus}`, 'success');
+        loadCreativeWorks();
+      }
+    } catch (error) {
+      showNotification('Failed to update status', 'error');
+      console.error('Error updating status:', error);
+    }
+  };
+
   const renderOverview = () => (
     <section className={styles.section}>
       <h2>Overview</h2>
@@ -347,7 +369,12 @@ const Dashboard = () => {
     getRowData: (project) => [
       project.title,
       Array.isArray(project.technologies) ? project.technologies.join(', ') : project.technologies,
-      <span className={styles.statusActive}>Active</span>,
+      <button 
+        className={project.status === 'Inactive' ? styles.statusInactive : styles.statusActive}
+        onClick={() => handleStatusToggle(project._id || project.id, 'project', project.status || 'Active')}
+      >
+        {project.status || 'Active'}
+      </button>,
     ],
     isAddOpen: isAddProjectOpen,
     setAddOpen: setAddProjectOpen,
@@ -371,7 +398,12 @@ const Dashboard = () => {
     getRowData: (creative) => [
       creative.title,
       creative.mediums,
-      <span className={styles.statusActive}>Active</span>,
+      <button 
+        className={creative.status === 'Inactive' ? styles.statusInactive : styles.statusActive}
+        onClick={() => handleStatusToggle(creative._id, 'creative', creative.status || 'Active')}
+      >
+        {creative.status || 'Active'}
+      </button>,
     ],
     isAddOpen: isAddCreativeOpen,
     setAddOpen: setAddCreativeOpen,
