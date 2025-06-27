@@ -56,7 +56,7 @@ class ApiService {
   // Projects API
   async getProjects() {
     const data = await this.request('/projects');
-    return Array.isArray(data) ? data : data.projects || [];
+    return data.projects || [];
   }
 
   async getProject(id) {

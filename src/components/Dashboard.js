@@ -361,13 +361,13 @@ const Dashboard = () => {
     columns: ['Title', 'Technologies', 'Status'],
     itemType: 'project',
     getRowData: (project) => [
-      project.title || project.name || 'Untitled',
-      Array.isArray(project.technologies) ? project.technologies.join(', ') : (project.technologies || project.tech || 'N/A'),
+      project.title || 'Untitled',
+      Array.isArray(project.technologies) ? project.technologies.join(', ') : (project.technologies || 'N/A'),
       <button 
-        className={itemStatuses[project._id || project.id] === 'Inactive' ? styles.statusInactive : styles.statusActive}
-        onClick={() => handleStatusToggle(project._id || project.id, 'project')}
+        className={itemStatuses[project.id] === 'Inactive' ? styles.statusInactive : styles.statusActive}
+        onClick={() => handleStatusToggle(project.id, 'project')}
       >
-        {itemStatuses[project._id || project.id] || 'Active'}
+        {itemStatuses[project.id] || 'Active'}
       </button>,
     ],
     isAddOpen: isAddProjectOpen,
@@ -390,13 +390,13 @@ const Dashboard = () => {
     columns: ['Title', 'Mediums', 'Status'],
     itemType: 'creative',
     getRowData: (creative) => [
-      creative.title || creative.name || 'Untitled',
-      creative.mediums || creative.medium || 'N/A',
+      creative.title || 'Untitled',
+      creative.mediums || 'N/A',
       <button 
-        className={itemStatuses[creative._id] === 'Inactive' ? styles.statusInactive : styles.statusActive}
-        onClick={() => handleStatusToggle(creative._id, 'creative')}
+        className={itemStatuses[creative.id] === 'Inactive' ? styles.statusInactive : styles.statusActive}
+        onClick={() => handleStatusToggle(creative.id, 'creative')}
       >
-        {itemStatuses[creative._id] || 'Active'}
+        {itemStatuses[creative.id] || 'Active'}
       </button>,
     ],
     isAddOpen: isAddCreativeOpen,
