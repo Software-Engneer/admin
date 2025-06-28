@@ -8,6 +8,7 @@ const EditProjectForm = ({ project, onSubmit, onCancel, isEditing = false }) => 
     description: '',
     technologies: '',
     githubLink: '',
+    projectLink: '',
     image: null,
   });
   const [preview, setPreview] = useState(null);
@@ -22,6 +23,7 @@ const EditProjectForm = ({ project, onSubmit, onCancel, isEditing = false }) => 
         description: project.description || '',
         technologies: project.technologies || '',
         githubLink: project.githubLink || '',
+        projectLink: project.projectLink || '',
         image: null,
       });
       if (project.image) {
@@ -128,6 +130,18 @@ const EditProjectForm = ({ project, onSubmit, onCancel, isEditing = false }) => 
           value={form.githubLink}
           onChange={handleChange}
           placeholder="https://github.com/username/project or https://demo-link.com"
+        />
+      </div>
+      <div>
+        <label className={styles.label} htmlFor="projectLink">Project Link (Live Demo/Website)</label>
+        <input
+          className={styles.input}
+          type="url"
+          id="projectLink"
+          name="projectLink"
+          value={form.projectLink}
+          onChange={handleChange}
+          placeholder="https://demo-link.com"
         />
       </div>
       <div className={styles.buttonRow}>
