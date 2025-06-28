@@ -90,6 +90,7 @@ class ApiService {
     formData.append('title', projectData.title);
     formData.append('description', projectData.description);
     formData.append('technologies', projectData.technologies);
+    formData.append('githubLink', projectData.githubLink || '');
     
     // Add image file
     if (projectData.image) {
@@ -106,6 +107,7 @@ class ApiService {
     formData.append('title', projectData.title);
     formData.append('description', projectData.description);
     formData.append('technologies', projectData.technologies);
+    formData.append('githubLink', projectData.githubLink || '');
     
     // Add image file if provided
     if (projectData.image) {

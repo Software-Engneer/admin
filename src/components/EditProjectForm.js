@@ -7,6 +7,7 @@ const EditProjectForm = ({ project, onSubmit, onCancel, isEditing = false }) => 
     title: '',
     description: '',
     technologies: '',
+    githubLink: '',
     image: null,
   });
   const [preview, setPreview] = useState(null);
@@ -20,6 +21,7 @@ const EditProjectForm = ({ project, onSubmit, onCancel, isEditing = false }) => 
         title: project.title || '',
         description: project.description || '',
         technologies: project.technologies || '',
+        githubLink: project.githubLink || '',
         image: null,
       });
       if (project.image) {
@@ -114,6 +116,18 @@ const EditProjectForm = ({ project, onSubmit, onCancel, isEditing = false }) => 
           onChange={handleChange}
           placeholder="e.g. React, Node.js, MongoDB"
           required
+        />
+      </div>
+      <div>
+        <label className={styles.label} htmlFor="githubLink">Project Link (GitHub/Live Demo)</label>
+        <input
+          className={styles.input}
+          type="url"
+          id="githubLink"
+          name="githubLink"
+          value={form.githubLink}
+          onChange={handleChange}
+          placeholder="https://github.com/username/project or https://demo-link.com"
         />
       </div>
       <div className={styles.buttonRow}>

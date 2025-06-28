@@ -90,7 +90,7 @@ const AddProjectForm = ({ onSubmit, onCancel }) => {
         />
       </div>
       <div>
-        <label className={styles.label} htmlFor="githubLink">Project Link (GitHub/Website)</label>
+        <label className={styles.label} htmlFor="githubLink">Project Link (GitHub/Live Demo)</label>
         <input
           className={styles.input}
           type="url"
@@ -98,7 +98,7 @@ const AddProjectForm = ({ onSubmit, onCancel }) => {
           name="githubLink"
           value={form.githubLink}
           onChange={handleChange}
-          placeholder="https://github.com/username/project or https://project-website.com"
+          placeholder="https://github.com/username/project or https://demo-link.com"
         />
       </div>
       <div className={styles.buttonRow}>
