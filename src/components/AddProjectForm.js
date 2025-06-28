@@ -6,6 +6,7 @@ const AddProjectForm = ({ onSubmit, onCancel }) => {
     title: '',
     description: '',
     technologies: '',
+    githubLink: '',
     image: null,
   });
   const [preview, setPreview] = useState(null);
@@ -86,6 +87,18 @@ const AddProjectForm = ({ onSubmit, onCancel }) => {
           onChange={handleChange}
           placeholder="e.g. React, Node.js, MongoDB"
           required
+        />
+      </div>
+      <div>
+        <label className={styles.label} htmlFor="githubLink">Project Link (GitHub/Website)</label>
+        <input
+          className={styles.input}
+          type="url"
+          id="githubLink"
+          name="githubLink"
+          value={form.githubLink}
+          onChange={handleChange}
+          placeholder="https://github.com/username/project or https://project-website.com"
         />
       </div>
       <div className={styles.buttonRow}>
