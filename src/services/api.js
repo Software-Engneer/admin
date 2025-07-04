@@ -89,7 +89,13 @@ class ApiService {
     // Add text fields
     formData.append('title', projectData.title);
     formData.append('description', projectData.description);
-    formData.append('technologies', projectData.technologies);
+    
+    // Convert technologies string to array
+    if (projectData.technologies) {
+      const technologiesArray = projectData.technologies.split(',').map(t => t.trim()).filter(Boolean);
+      formData.append('technologies', JSON.stringify(technologiesArray));
+    }
+    
     formData.append('githubLink', projectData.githubLink || '');
     formData.append('projectLink', projectData.projectLink || '');
     
@@ -107,7 +113,13 @@ class ApiService {
     // Add text fields
     formData.append('title', projectData.title);
     formData.append('description', projectData.description);
-    formData.append('technologies', projectData.technologies);
+    
+    // Convert technologies string to array
+    if (projectData.technologies) {
+      const technologiesArray = projectData.technologies.split(',').map(t => t.trim()).filter(Boolean);
+      formData.append('technologies', JSON.stringify(technologiesArray));
+    }
+    
     formData.append('githubLink', projectData.githubLink || '');
     formData.append('projectLink', projectData.projectLink || '');
     
@@ -229,6 +241,10 @@ class ApiService {
 
   async deleteContactMessage(id) {
     return this.request(`/contact/messages/${id}`, { method: 'DELETE' });
+  }
+
+  async markMessageAsRead(id) {
+    return this.request(`/contact/messages/${id}/read`, { method: 'PATCH' });
   }
 
   // Dashboard stats

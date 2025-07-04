@@ -172,6 +172,13 @@ const Dashboard = () => {
         setSelectedMessage(messageData);
         setReadMessageOpen(true);
         setReadMessages(prev => new Set([...prev, itemId]));
+        
+        // Mark message as read in database
+        try {
+          await apiService.markMessageAsRead(itemId);
+        } catch (error) {
+          console.error('Failed to mark message as read:', error);
+        }
       } else if (action === 'reply' && itemType === 'message') {
         // Open email client with pre-filled email
         const email = messageData?.email || '';
@@ -495,7 +502,7 @@ const Dashboard = () => {
                   safeMessages.map((message, idx) => {
                     const isLast = idx === safeMessages.length - 1;
                     const messageId = message.id || message._id;
-                    const isRead = readMessages.has(messageId);
+                    const isRead = message.read || readMessages.has(messageId);
                     return (
                       <tr key={messageId} className={isRead ? styles.readMessage : styles.unreadMessage}>
                         <td>
