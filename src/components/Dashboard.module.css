@@ -242,7 +242,7 @@
 }
 
 .tableContainer {
-  overflow-x: auto;
+  overflow: visible;
   margin: 2rem 0;
   padding: 0 1rem;
   position: relative;
@@ -253,7 +253,7 @@
   border-collapse: collapse;
   margin: 1.5rem 0;
   border-radius: 8px;
-  overflow: hidden;
+  overflow: visible;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
@@ -279,7 +279,6 @@
   border-bottom: none;
 }
 
-/* Ensure the actions column allows overflow */
 .table td:last-child {
   position: relative;
   overflow: visible;
@@ -390,7 +389,7 @@
 .actionMenuContainer {
   position: relative;
   display: inline-block;
-  z-index: 1001;
+  z-index: 2000;
 }
 
 .menuToggle {
@@ -422,7 +421,7 @@
   border: 1px solid #dee2e6;
   border-radius: 6px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  z-index: 1002;
+  z-index: 2100;
   min-width: 120px;
   overflow: hidden;
   max-height: 200px;
@@ -604,7 +603,8 @@
     padding: 1.2rem 0.8rem;
   }
   .actionMenu {
-    right: -50px;
+    right: 0;
+    left: auto;
   }
 }
 
