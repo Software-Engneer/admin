@@ -442,11 +442,12 @@ const Dashboard = () => {
     onAddClick: () => setAddCreativeOpen(true),
     loading: loading.creative,
     items: creativeWorks,
-    columns: ['Title', 'Mediums', 'Status'],
+    columns: ['Title', 'Type', 'Technologies', 'Status'],
     itemType: 'creative',
     getRowData: (creative) => [
       creative.title || 'Untitled',
-      creative.mediums || 'N/A',
+      creative.type ? creative.type.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') : 'N/A',
+      Array.isArray(creative.technologies) ? creative.technologies.join(', ') : (creative.technologies || 'N/A'),
       <button 
         className={itemStatuses[creative.id] === 'Inactive' ? styles.statusInactive : styles.statusActive}
         onClick={() => handleStatusToggle(creative.id, 'creative')}

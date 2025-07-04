@@ -5,31 +5,40 @@ import config from '../config';
 const EditCreativeForm = ({ creative, onSubmit, onCancel, isEditing = false }) => {
   const [form, setForm] = useState({
     title: '',
+    type: '',
     description: '',
-    mediums: '',
+    technologies: '',
+    year: new Date().getFullYear(),
+    featured: false,
     image: null,
   });
   const [preview, setPreview] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const fileInputRef = useRef();
 
+  // Valid creative work types from backend validation
+  const validTypes = ['digital-art', 'branding', 'photography', 'illustration', 'ui-design', '3d-art'];
+
   // Initialize form with creative data if editing
   useEffect(() => {
     if (creative && isEditing) {
       setForm({
         title: creative.title || '',
+        type: creative.type || '',
         description: creative.description || '',
-        mediums: creative.mediums || '',
+        technologies: Array.isArray(creative.technologies) ? creative.technologies.join(', ') : (creative.technologies || ''),
+        year: creative.year || new Date().getFullYear(),
+        featured: creative.featured || false,
         image: null,
       });
-      if (creative.image) {
-        setPreview(`${config.UPLOAD_URL}/images/${creative.image}`);
+      if (creative.images && creative.images.length > 0) {
+        setPreview(`${config.UPLOAD_URL}/uploads${creative.images[0]}`);
       }
     }
   }, [creative, isEditing]);
 
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
+    const { name, value, files, type, checked } = e.target;
     if (name === 'image') {
       const file = files[0];
       setForm((prev) => ({ ...prev, image: file }));
@@ -40,6 +49,8 @@ const EditCreativeForm = ({ creative, onSubmit, onCancel, isEditing = false }) =
       } else {
         setPreview(null);
       }
+    } else if (type === 'checkbox') {
+      setForm((prev) => ({ ...prev, [name]: checked }));
     } else {
       setForm((prev) => ({ ...prev, [name]: value }));
     }
@@ -47,7 +58,7 @@ const EditCreativeForm = ({ creative, onSubmit, onCancel, isEditing = false }) =
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.title || !form.description || !form.mediums) return;
+    if (!form.title || !form.type || !form.description) return;
     
     setIsLoading(true);
     try {
@@ -76,7 +87,7 @@ const EditCreativeForm = ({ creative, onSubmit, onCancel, isEditing = false }) =
         {preview && (
           <img src={preview} alt="Preview" className={styles.preview} />
         )}
-        {isEditing && !form.image && creative?.image && (
+        {isEditing && !form.image && creative?.images && creative.images.length > 0 && (
           <p className={styles.helpText}>Current image will be kept if no new image is selected</p>
         )}
       </div>
@@ -93,6 +104,24 @@ const EditCreativeForm = ({ creative, onSubmit, onCancel, isEditing = false }) =
         />
       </div>
       <div>
+        <label className={styles.label} htmlFor="type">Type</label>
+        <select
+          className={styles.input}
+          id="type"
+          name="type"
+          value={form.type}
+          onChange={handleChange}
+          required
+        >
+          <option value="">Select a type</option>
+          {validTypes.map(type => (
+            <option key={type} value={type}>
+              {type.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div>
         <label className={styles.label} htmlFor="description">Description</label>
         <textarea
           className={styles.textarea}
@@ -104,17 +133,40 @@ const EditCreativeForm = ({ creative, onSubmit, onCancel, isEditing = false }) =
         />
       </div>
       <div>
-        <label className={styles.label} htmlFor="mediums">Mediums/Technologies Used</label>
+        <label className={styles.label} htmlFor="technologies">Technologies Used</label>
         <input
           className={styles.input}
           type="text"
-          id="mediums"
-          name="mediums"
-          value={form.mediums}
+          id="technologies"
+          name="technologies"
+          value={form.technologies}
           onChange={handleChange}
-          placeholder="e.g. Digital Art, Illustration, Photoshop"
-          required
+          placeholder="e.g. Photoshop, Illustrator, Digital Art"
         />
+      </div>
+      <div>
+        <label className={styles.label} htmlFor="year">Year</label>
+        <input
+          className={styles.input}
+          type="number"
+          id="year"
+          name="year"
+          value={form.year}
+          onChange={handleChange}
+          min="1900"
+          max={new Date().getFullYear()}
+        />
+      </div>
+      <div>
+        <label className={styles.label}>
+          <input
+            type="checkbox"
+            name="featured"
+            checked={form.featured}
+            onChange={handleChange}
+          />
+          Featured Work
+        </label>
       </div>
       <div className={styles.buttonRow}>
         <button 

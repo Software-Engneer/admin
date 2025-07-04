@@ -155,8 +155,11 @@ class ApiService {
     
     // Add text fields
     formData.append('title', creativeData.title);
+    formData.append('type', creativeData.type);
     formData.append('description', creativeData.description);
-    formData.append('mediums', creativeData.mediums);
+    formData.append('technologies', creativeData.technologies);
+    formData.append('year', creativeData.year);
+    formData.append('featured', creativeData.featured);
     
     // Add image file
     if (creativeData.image) {
@@ -171,8 +174,11 @@ class ApiService {
     
     // Add text fields
     formData.append('title', creativeData.title);
+    formData.append('type', creativeData.type);
     formData.append('description', creativeData.description);
-    formData.append('mediums', creativeData.mediums);
+    formData.append('technologies', creativeData.technologies);
+    formData.append('year', creativeData.year);
+    formData.append('featured', creativeData.featured);
     
     // Add image file if provided
     if (creativeData.image) {

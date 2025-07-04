@@ -4,15 +4,21 @@ import styles from './AddProjectForm.module.css';
 const AddCreativeForm = ({ onSubmit, onCancel }) => {
   const [form, setForm] = useState({
     title: '',
+    type: '',
     description: '',
-    mediums: '',
+    technologies: '',
+    year: new Date().getFullYear(),
+    featured: false,
     image: null,
   });
   const [preview, setPreview] = useState(null);
   const fileInputRef = useRef();
 
+  // Valid creative work types from backend validation
+  const validTypes = ['digital-art', 'branding', 'photography', 'illustration', 'ui-design', '3d-art'];
+
   const handleChange = (e) => {
-    const { name, value, files } = e.target;
+    const { name, value, files, type, checked } = e.target;
     if (name === 'image') {
       const file = files[0];
       setForm((prev) => ({ ...prev, image: file }));
@@ -23,6 +29,8 @@ const AddCreativeForm = ({ onSubmit, onCancel }) => {
       } else {
         setPreview(null);
       }
+    } else if (type === 'checkbox') {
+      setForm((prev) => ({ ...prev, [name]: checked }));
     } else {
       setForm((prev) => ({ ...prev, [name]: value }));
     }
@@ -30,7 +38,7 @@ const AddCreativeForm = ({ onSubmit, onCancel }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!form.title || !form.description || !form.mediums || !form.image) return;
+    if (!form.title || !form.type || !form.description || !form.image) return;
     onSubmit(form);
   };
 
@@ -65,6 +73,24 @@ const AddCreativeForm = ({ onSubmit, onCancel }) => {
         />
       </div>
       <div>
+        <label className={styles.label} htmlFor="type">Type</label>
+        <select
+          className={styles.input}
+          id="type"
+          name="type"
+          value={form.type}
+          onChange={handleChange}
+          required
+        >
+          <option value="">Select a type</option>
+          {validTypes.map(type => (
+            <option key={type} value={type}>
+              {type.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div>
         <label className={styles.label} htmlFor="description">Description</label>
         <textarea
           className={styles.textarea}
@@ -76,17 +102,40 @@ const AddCreativeForm = ({ onSubmit, onCancel }) => {
         />
       </div>
       <div>
-        <label className={styles.label} htmlFor="mediums">Mediums/Technologies Used</label>
+        <label className={styles.label} htmlFor="technologies">Technologies Used</label>
         <input
           className={styles.input}
           type="text"
-          id="mediums"
-          name="mediums"
-          value={form.mediums}
+          id="technologies"
+          name="technologies"
+          value={form.technologies}
           onChange={handleChange}
-          placeholder="e.g. Digital Art, Illustration, Photoshop"
-          required
+          placeholder="e.g. Photoshop, Illustrator, Digital Art"
         />
+      </div>
+      <div>
+        <label className={styles.label} htmlFor="year">Year</label>
+        <input
+          className={styles.input}
+          type="number"
+          id="year"
+          name="year"
+          value={form.year}
+          onChange={handleChange}
+          min="1900"
+          max={new Date().getFullYear()}
+        />
+      </div>
+      <div>
+        <label className={styles.label}>
+          <input
+            type="checkbox"
+            name="featured"
+            checked={form.featured}
+            onChange={handleChange}
+          />
+          Featured Work
+        </label>
       </div>
       <div className={styles.buttonRow}>
         <button type="button" className={styles.cancelButton} onClick={onCancel}>Cancel</button>
