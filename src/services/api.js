@@ -205,11 +205,12 @@ class ApiService {
 
   // Contact messages API
   async getContactMessages() {
-    return this.request('/contact');
+    const data = await this.request('/contact/messages');
+    return Array.isArray(data) ? data : data.messages || [];
   }
 
   async deleteContactMessage(id) {
-    return this.request(`/contact/${id}`, { method: 'DELETE' });
+    return this.request(`/contact/messages/${id}`, { method: 'DELETE' });
   }
 
   // Dashboard stats

@@ -473,7 +473,7 @@ const Dashboard = () => {
                   </tr>
                 ) : (
                   safeMessages.map((message) => (
-                    <tr key={message._id}>
+                    <tr key={message.id || message._id}>
                       <td>{message.name}</td>
                       <td>{message.email}</td>
                       <td className={styles.messageCell}>
@@ -482,11 +482,11 @@ const Dashboard = () => {
                           : message.message
                         }
                       </td>
-                      <td>{new Date(message.createdAt).toLocaleDateString()}</td>
+                      <td>{new Date(message.timestamp || message.createdAt).toLocaleDateString()}</td>
                       <td>
                         <button 
                           className={styles.deleteButton}
-                          onClick={() => handleDeleteMessage(message._id)}
+                          onClick={() => handleDeleteMessage(message.id || message._id)}
                         >
                           Delete
                         </button>
@@ -658,6 +658,11 @@ const Dashboard = () => {
                   }}
                 >
                   Messages
+                  {contactMessages.length > 0 && (
+                    <span className={styles.messageBadge}>
+                      {contactMessages.length}
+                    </span>
+                  )}
                 </button>
               </li>
               <li>
