@@ -18,11 +18,14 @@ const Dashboard = () => {
   const [isAddCreativeOpen, setAddCreativeOpen] = useState(false);
   const [isEditProjectOpen, setEditProjectOpen] = useState(false);
   const [isEditCreativeOpen, setEditCreativeOpen] = useState(false);
+  const [isReadMessageOpen, setReadMessageOpen] = useState(false);
+  const [selectedMessage, setSelectedMessage] = useState(null);
   
   // Data states
   const [projects, setProjects] = useState([]);
   const [creativeWorks, setCreativeWorks] = useState([]);
   const [contactMessages, setContactMessages] = useState([]);
+  const [readMessages, setReadMessages] = useState(new Set());
   const [stats, setStats] = useState({
     totalProjects: 0,
     totalCreativeWorks: 0,
@@ -133,7 +136,7 @@ const Dashboard = () => {
     setOpenMenu(openMenu === id ? null : id);
   };
 
-  const handleMenuAction = async (action, itemId, itemType) => {
+  const handleMenuAction = async (action, itemId, itemType, messageData = null) => {
     setOpenMenu(null);
     
     try {
@@ -157,8 +160,24 @@ const Dashboard = () => {
             await apiService.deleteCreativeWork(itemId);
             showNotification('Creative work deleted successfully', 'success');
             loadCreativeWorks();
+          } else if (itemType === 'message') {
+            await apiService.deleteContactMessage(itemId);
+            showNotification('Message deleted successfully', 'success');
+            loadContactMessages();
+            loadStats();
           }
         }
+      } else if (action === 'read' && itemType === 'message') {
+        // Show full message in a modal and mark as read
+        setSelectedMessage(messageData);
+        setReadMessageOpen(true);
+        setReadMessages(prev => new Set([...prev, itemId]));
+      } else if (action === 'reply' && itemType === 'message') {
+        // Open email client with pre-filled email
+        const email = messageData?.email || '';
+        const subject = `Re: Message from ${messageData?.name}`;
+        const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}`;
+        window.open(mailtoLink, '_blank');
       }
     } catch (error) {
       showNotification(`Failed to ${action} item`, 'error');
@@ -472,27 +491,38 @@ const Dashboard = () => {
                     <td colSpan="5" className={styles.noData}>No messages found</td>
                   </tr>
                 ) : (
-                  safeMessages.map((message) => (
-                    <tr key={message.id || message._id}>
-                      <td>{message.name}</td>
-                      <td>{message.email}</td>
-                      <td className={styles.messageCell}>
-                        {message.message.length > 50 
-                          ? `${message.message.substring(0, 50)}...` 
-                          : message.message
-                        }
-                      </td>
-                      <td>{new Date(message.timestamp || message.createdAt).toLocaleDateString()}</td>
-                      <td>
-                        <button 
-                          className={styles.deleteButton}
-                          onClick={() => handleDeleteMessage(message.id || message._id)}
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))
+                  safeMessages.map((message, idx) => {
+                    const isLast = idx === safeMessages.length - 1;
+                    const messageId = message.id || message._id;
+                    const isRead = readMessages.has(messageId);
+                    return (
+                      <tr key={messageId} className={isRead ? styles.readMessage : styles.unreadMessage}>
+                        <td>
+                          <div className={styles.messageName}>
+                            {message.name}
+                            {!isRead && <span className={styles.unreadDot}></span>}
+                          </div>
+                        </td>
+                        <td>{message.email}</td>
+                        <td className={styles.messageCell}>
+                          {message.message.length > 50 
+                            ? `${message.message.substring(0, 50)}...` 
+                            : message.message
+                          }
+                        </td>
+                        <td>{new Date(message.timestamp || message.createdAt).toLocaleDateString()}</td>
+                        <td>
+                          <ActionMenu 
+                            itemId={messageId} 
+                            itemName={message.name} 
+                            itemType="message"
+                            upwards={isLast}
+                            messageData={message}
+                          />
+                        </td>
+                      </tr>
+                    );
+                  })
                 )}
               </tbody>
             </table>
@@ -542,13 +572,57 @@ const Dashboard = () => {
     }
   };
 
-  const ActionMenu = ({ itemId, itemName, itemType, upwards }) => {
+  const ActionMenu = ({ itemId, itemName, itemType, upwards, messageData = null }) => {
     const handleToggle = () => {
       console.log('Menu toggle clicked for:', itemId, 'Current openMenu:', openMenu);
       handleMenuToggle(itemId);
     };
 
     console.log('ActionMenu render - itemId:', itemId, 'openMenu:', openMenu, 'isOpen:', openMenu === itemId);
+
+    const renderMenuItems = () => {
+      if (itemType === 'message') {
+        return (
+          <>
+            <button 
+              className={styles.menuItem}
+              onClick={() => handleMenuAction('read', itemId, itemType, messageData)}
+            >
+              Read
+            </button>
+            <button 
+              className={styles.menuItem}
+              onClick={() => handleMenuAction('reply', itemId, itemType, messageData)}
+            >
+              Reply
+            </button>
+            <button 
+              className={styles.menuItem}
+              onClick={() => handleMenuAction('delete', itemId, itemType, messageData)}
+            >
+              Delete
+            </button>
+          </>
+        );
+      } else {
+        return (
+          <>
+            <button 
+              className={styles.menuItem}
+              onClick={() => handleMenuAction('edit', itemId, itemType)}
+            >
+              Edit
+            </button>
+            <button 
+              className={styles.menuItem}
+              onClick={() => handleMenuAction('delete', itemId, itemType)}
+            >
+              Delete
+            </button>
+          </>
+        );
+      }
+    };
 
     return (
       <div className={styles.actionMenuContainer}>
@@ -562,18 +636,7 @@ const Dashboard = () => {
           <div 
             className={styles.actionMenu + (upwards ? ' ' + styles.upwards : '')}
           >
-            <button 
-              className={styles.menuItem}
-              onClick={() => handleMenuAction('edit', itemId, itemType)}
-            >
-              Edit
-            </button>
-            <button 
-              className={styles.menuItem}
-              onClick={() => handleMenuAction('delete', itemId, itemType)}
-            >
-              Delete
-            </button>
+            {renderMenuItems()}
           </div>
         )}
       </div>
@@ -660,7 +723,7 @@ const Dashboard = () => {
                   Messages
                   {contactMessages.length > 0 && (
                     <span className={styles.messageBadge}>
-                      {contactMessages.length}
+                      {contactMessages.length - readMessages.size}
                     </span>
                   )}
                 </button>
@@ -684,6 +747,50 @@ const Dashboard = () => {
         </main>
       </div>
       
+      {/* Message Reading Modal */}
+      <Modal isOpen={isReadMessageOpen} onClose={() => {
+        setReadMessageOpen(false);
+        setSelectedMessage(null);
+      }}>
+        {selectedMessage && (
+          <div className={styles.messageModal}>
+            <h2 style={{marginTop: 0, marginBottom: '1rem'}}>Message Details</h2>
+            <div className={styles.messageInfo}>
+              <p><strong>From:</strong> {selectedMessage.name}</p>
+              <p><strong>Email:</strong> {selectedMessage.email}</p>
+              <p><strong>Date:</strong> {new Date(selectedMessage.timestamp || selectedMessage.createdAt).toLocaleString()}</p>
+            </div>
+            <div className={styles.messageContent}>
+              <h3>Message:</h3>
+              <p>{selectedMessage.message}</p>
+            </div>
+            <div className={styles.messageActions}>
+              <button 
+                className={styles.actionButton}
+                onClick={() => {
+                  const email = selectedMessage.email;
+                  const subject = `Re: Message from ${selectedMessage.name}`;
+                  const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}`;
+                  window.open(mailtoLink, '_blank');
+                }}
+              >
+                Reply via Email
+              </button>
+              <button 
+                className={styles.actionButtonDelete}
+                onClick={() => {
+                  handleDeleteMessage(selectedMessage.id || selectedMessage._id);
+                  setReadMessageOpen(false);
+                  setSelectedMessage(null);
+                }}
+              >
+                Delete Message
+              </button>
+            </div>
+          </div>
+        )}
+      </Modal>
+
       {/* Notification */}
       {notification && (
         <Notification
