@@ -157,7 +157,13 @@ class ApiService {
     formData.append('title', creativeData.title);
     formData.append('type', creativeData.type);
     formData.append('description', creativeData.description);
-    formData.append('technologies', creativeData.technologies);
+    
+    // Convert technologies string to array
+    if (creativeData.technologies) {
+      const technologiesArray = creativeData.technologies.split(',').map(t => t.trim()).filter(Boolean);
+      formData.append('technologies', JSON.stringify(technologiesArray));
+    }
+    
     formData.append('year', creativeData.year);
     formData.append('featured', creativeData.featured);
     
@@ -176,7 +182,13 @@ class ApiService {
     formData.append('title', creativeData.title);
     formData.append('type', creativeData.type);
     formData.append('description', creativeData.description);
-    formData.append('technologies', creativeData.technologies);
+    
+    // Convert technologies string to array
+    if (creativeData.technologies) {
+      const technologiesArray = creativeData.technologies.split(',').map(t => t.trim()).filter(Boolean);
+      formData.append('technologies', JSON.stringify(technologiesArray));
+    }
+    
     formData.append('year', creativeData.year);
     formData.append('featured', creativeData.featured);
     
