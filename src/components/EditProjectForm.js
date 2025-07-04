@@ -27,7 +27,13 @@ const EditProjectForm = ({ project, onSubmit, onCancel, isEditing = false }) => 
         image: null,
       });
       if (project.image) {
-        setPreview(`${config.UPLOAD_URL}/images/${project.image}`);
+        // Check if it's a base64 image, URL, or local path
+        const imageUrl = project.image.startsWith('data:') 
+          ? project.image 
+          : project.image.startsWith('http') 
+            ? project.image 
+            : `${config.UPLOAD_URL}/images/${project.image}`;
+        setPreview(imageUrl);
       }
     }
   }, [project, isEditing]);

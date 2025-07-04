@@ -32,7 +32,13 @@ const EditCreativeForm = ({ creative, onSubmit, onCancel, isEditing = false }) =
         image: null,
       });
       if (creative.images && creative.images.length > 0) {
-        setPreview(`${config.UPLOAD_URL}/uploads${creative.images[0]}`);
+        // Check if it's a base64 image, URL, or local path
+        const imageUrl = creative.images[0].startsWith('data:') 
+          ? creative.images[0] 
+          : creative.images[0].startsWith('http') 
+            ? creative.images[0] 
+            : `${config.UPLOAD_URL}/uploads${creative.images[0]}`;
+        setPreview(imageUrl);
       }
     }
   }, [creative, isEditing]);
