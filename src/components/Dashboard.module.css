@@ -333,6 +333,22 @@
   word-wrap: break-word;
 }
 
+.messagePreview {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: help;
+  color: #666;
+  font-style: italic;
+}
+
+.messagePreview:hover {
+  color: #333;
+  text-decoration: underline;
+}
+
 .deleteButton {
   background-color: #dc3545;
   color: white;

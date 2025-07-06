@@ -508,6 +508,12 @@ const Dashboard = () => {
                     const fullName = message.firstName && message.lastName 
                       ? `${message.firstName} ${message.lastName}`
                       : message.name || 'Unknown';
+                    
+                    // Create message preview (first 30 characters with ellipsis)
+                    const messagePreview = message.message && message.message.length > 30 
+                      ? `${message.message.substring(0, 30)}...`
+                      : message.message || 'No message';
+                    
                     return (
                       <tr key={messageId} className={isRead ? styles.readMessage : styles.unreadMessage}>
                         <td>
@@ -519,10 +525,9 @@ const Dashboard = () => {
                         <td>{message.email}</td>
                         <td>{message.phoneNumber || 'N/A'}</td>
                         <td className={styles.messageCell}>
-                          {message.message.length > 50 
-                            ? `${message.message.substring(0, 50)}...` 
-                            : message.message
-                          }
+                          <span className={styles.messagePreview} title={message.message}>
+                            {messagePreview}
+                          </span>
                         </td>
                         <td>{new Date(message.timestamp || message.createdAt).toLocaleDateString()}</td>
                         <td>
