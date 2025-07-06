@@ -176,6 +176,8 @@ const Dashboard = () => {
         // Mark message as read in database
         try {
           await apiService.markMessageAsRead(itemId);
+          // Reload messages to get updated read status from database
+          loadContactMessages();
         } catch (error) {
           console.error('Failed to mark message as read:', error);
         }
@@ -476,6 +478,14 @@ const Dashboard = () => {
   const renderMessages = () => {
     // Defensive: ensure contactMessages is always an array
     const safeMessages = Array.isArray(contactMessages) ? contactMessages : [];
+    
+    // Calculate unread messages properly
+    const unreadCount = safeMessages.filter(message => {
+      const messageId = message.id || message._id;
+      // Check if message is read in database OR in current session
+      return !(message.read || readMessages.has(messageId));
+    }).length;
+    
     return (
       <section className={styles.section}>
         <h2>Contact Messages</h2>
@@ -589,6 +599,15 @@ const Dashboard = () => {
       default:
         return renderOverview();
     }
+  };
+
+  // Calculate unread messages count for sidebar
+  const getUnreadCount = () => {
+    const safeMessages = Array.isArray(contactMessages) ? contactMessages : [];
+    return safeMessages.filter(message => {
+      const messageId = message.id || message._id;
+      return !(message.read || readMessages.has(messageId));
+    }).length;
   };
 
   const ActionMenu = ({ itemId, itemName, itemType, upwards, messageData = null }) => {
@@ -740,9 +759,9 @@ const Dashboard = () => {
                   }}
                 >
                   Messages
-                  {contactMessages.length > 0 && (
+                  {getUnreadCount() > 0 && (
                     <span className={styles.messageBadge}>
-                      {contactMessages.length - readMessages.size}
+                      {getUnreadCount()}
                     </span>
                   )}
                 </button>
