@@ -488,6 +488,7 @@ const Dashboard = () => {
                 <tr>
                   <th>Name</th>
                   <th>Email</th>
+                  <th>Phone</th>
                   <th>Message</th>
                   <th>Date</th>
                   <th>Actions</th>
@@ -496,22 +497,27 @@ const Dashboard = () => {
               <tbody>
                 {safeMessages.length === 0 ? (
                   <tr>
-                    <td colSpan="5" className={styles.noData}>No messages found</td>
+                    <td colSpan="6" className={styles.noData}>No messages found</td>
                   </tr>
                 ) : (
                   safeMessages.map((message, idx) => {
                     const isLast = idx === safeMessages.length - 1;
                     const messageId = message.id || message._id;
                     const isRead = message.read || readMessages.has(messageId);
+                    // Combine firstName and lastName, fallback to old name field if new fields don't exist
+                    const fullName = message.firstName && message.lastName 
+                      ? `${message.firstName} ${message.lastName}`
+                      : message.name || 'Unknown';
                     return (
                       <tr key={messageId} className={isRead ? styles.readMessage : styles.unreadMessage}>
                         <td>
                           <div className={styles.messageName}>
-                            {message.name}
+                            {fullName}
                             {!isRead && <span className={styles.unreadDot}></span>}
                           </div>
                         </td>
                         <td>{message.email}</td>
+                        <td>{message.phoneNumber || 'N/A'}</td>
                         <td className={styles.messageCell}>
                           {message.message.length > 50 
                             ? `${message.message.substring(0, 50)}...` 
@@ -522,7 +528,7 @@ const Dashboard = () => {
                         <td>
                           <ActionMenu 
                             itemId={messageId} 
-                            itemName={message.name} 
+                            itemName={fullName} 
                             itemType="message"
                             upwards={isLast}
                             messageData={message}
@@ -764,8 +770,11 @@ const Dashboard = () => {
           <div className={styles.messageModal}>
             <h2 style={{marginTop: 0, marginBottom: '1rem'}}>Message Details</h2>
             <div className={styles.messageInfo}>
-              <p><strong>From:</strong> {selectedMessage.name}</p>
+              <p><strong>From:</strong> {selectedMessage.firstName && selectedMessage.lastName 
+                ? `${selectedMessage.firstName} ${selectedMessage.lastName}`
+                : selectedMessage.name || 'Unknown'}</p>
               <p><strong>Email:</strong> {selectedMessage.email}</p>
+              <p><strong>Phone:</strong> {selectedMessage.phoneNumber || 'N/A'}</p>
               <p><strong>Date:</strong> {new Date(selectedMessage.timestamp || selectedMessage.createdAt).toLocaleString()}</p>
             </div>
             <div className={styles.messageContent}>
@@ -777,7 +786,10 @@ const Dashboard = () => {
                 className={styles.actionButton}
                 onClick={() => {
                   const email = selectedMessage.email;
-                  const subject = `Re: Message from ${selectedMessage.name}`;
+                  const fullName = selectedMessage.firstName && selectedMessage.lastName 
+                    ? `${selectedMessage.firstName} ${selectedMessage.lastName}`
+                    : selectedMessage.name || 'Unknown';
+                  const subject = `Re: Message from ${fullName}`;
                   const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}`;
                   window.open(mailtoLink, '_blank');
                 }}
