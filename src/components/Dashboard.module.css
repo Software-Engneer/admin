@@ -31,11 +31,14 @@
   padding: 0.5rem 1vw;
   border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(135, 206, 235, 0.3);
 }
 
 .logoutButton:hover {
   background-color: #c82333;
+  box-shadow: 0 6px 20px rgba(135, 206, 235, 0.5);
+  transform: translateY(-2px);
 }
 
 .content {
@@ -72,15 +75,19 @@
   cursor: pointer;
   transition: all 0.3s ease;
   font-size: 1rem;
+  box-shadow: 0 4px 12px rgba(135, 206, 235, 0.3);
 }
 
 .navButton:hover {
   background-color: #f8f9fa;
+  box-shadow: 0 6px 20px rgba(135, 206, 235, 0.5);
+  transform: translateY(-2px);
 }
 
 .navButton.active {
   background-color: #007bff;
   color: white;
+  box-shadow: 0 6px 20px rgba(135, 206, 235, 0.5);
 }
 
 .navButton {
@@ -234,11 +241,13 @@
   font-size: 1rem;
   font-weight: 500;
   transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(135, 206, 235, 0.3);
 }
 
 .addButton:hover {
   background-color: #218838;
+  box-shadow: 0 6px 20px rgba(135, 206, 235, 0.5);
+  transform: translateY(-2px);
 }
 
 .tableContainer {
@@ -357,11 +366,14 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.9rem;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(135, 206, 235, 0.3);
 }
 
 .deleteButton:hover {
   background-color: #c82333;
+  box-shadow: 0 6px 20px rgba(135, 206, 235, 0.5);
+  transform: translateY(-2px);
 }
 
 .helpText {
@@ -380,11 +392,14 @@
   cursor: pointer;
   margin-right: 0.5rem;
   font-size: 0.8rem;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(135, 206, 235, 0.3);
 }
 
 .actionButton:hover {
   background-color: #0056b3;
+  box-shadow: 0 6px 20px rgba(135, 206, 235, 0.5);
+  transform: translateY(-2px);
 }
 
 .actionButtonDelete {
@@ -395,11 +410,14 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 0.8rem;
-  transition: background-color 0.3s ease;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(135, 206, 235, 0.3);
 }
 
 .actionButtonDelete:hover {
   background-color: #c82333;
+  box-shadow: 0 6px 20px rgba(135, 206, 235, 0.5);
+  transform: translateY(-2px);
 }
 
 .actionMenuContainer {

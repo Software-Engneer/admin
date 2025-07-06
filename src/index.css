@@ -11,3 +11,19 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+/* Global button styles with sky blue shadow */
+button {
+  box-shadow: 0 4px 12px rgba(135, 206, 235, 0.3) !important;
+  transition: all 0.3s ease !important;
+}
+
+button:hover {
+  box-shadow: 0 6px 20px rgba(135, 206, 235, 0.5) !important;
+  transform: translateY(-2px) !important;
+}
+
+button:active {
+  box-shadow: 0 2px 8px rgba(135, 206, 235, 0.4) !important;
+  transform: translateY(0) !important;
+}
