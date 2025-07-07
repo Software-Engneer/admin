@@ -272,6 +272,22 @@ class ApiService {
       };
     }
   }
+
+  // Update only the status of a project
+  async updateProjectStatus(id, status) {
+    return this.request(`/projects/${id}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status }),
+    });
+  }
+
+  // Update only the status of a creative work
+  async updateCreativeStatus(id, status) {
+    return this.request(`/creative/${id}/status`, {
+      method: 'PATCH',
+      body: JSON.stringify({ status }),
+    });
+  }
 }
 
 export default new ApiService(); 

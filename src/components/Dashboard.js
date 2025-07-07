@@ -259,17 +259,25 @@ const Dashboard = () => {
     }
   };
 
-  // Update status toggle handler to use local state only
-  const handleStatusToggle = (itemId, itemType) => {
+  // Update status toggle handler to persist to backend
+  const handleStatusToggle = async (itemId, itemType) => {
     const currentStatus = itemStatuses[itemId] || 'Active';
     const newStatus = currentStatus === 'Active' ? 'Inactive' : 'Active';
-    
-    setItemStatuses(prev => ({
-      ...prev,
-      [itemId]: newStatus
-    }));
-    
-    showNotification(`Status updated to ${newStatus}`, 'success');
+    try {
+      if (itemType === 'project') {
+        await apiService.updateProjectStatus(itemId, newStatus);
+      } else if (itemType === 'creative') {
+        await apiService.updateCreativeStatus(itemId, newStatus);
+      }
+      setItemStatuses(prev => ({
+        ...prev,
+        [itemId]: newStatus
+      }));
+      showNotification(`Status updated to ${newStatus}`, 'success');
+    } catch (error) {
+      showNotification('Failed to update status', 'error');
+      console.error('Error updating status:', error);
+    }
   };
 
   const renderOverview = () => (
@@ -426,10 +434,10 @@ const Dashboard = () => {
           title,
           technologies,
           <button 
-            className={itemStatuses[project?.id] === 'Inactive' ? styles.statusInactive : styles.statusActive}
-            onClick={() => handleStatusToggle(project?.id, 'project')}
+            className={itemStatuses[project?._id || project?.id] === 'Inactive' ? styles.statusInactive : styles.statusActive}
+            onClick={() => handleStatusToggle(project?._id || project?.id, 'project')}
           >
-            {itemStatuses[project?.id] || 'Active'}
+            {itemStatuses[project?._id || project?.id] || 'Active'}
           </button>,
         ];
       },
@@ -458,10 +466,10 @@ const Dashboard = () => {
       creative.type ? creative.type.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ') : 'N/A',
       Array.isArray(creative.technologies) ? creative.technologies.join(', ') : (creative.technologies || 'N/A'),
       <button 
-        className={itemStatuses[creative.id] === 'Inactive' ? styles.statusInactive : styles.statusActive}
-        onClick={() => handleStatusToggle(creative.id, 'creative')}
+        className={itemStatuses[creative._id || creative.id] === 'Inactive' ? styles.statusInactive : styles.statusActive}
+        onClick={() => handleStatusToggle(creative._id || creative.id, 'creative')}
       >
-        {itemStatuses[creative.id] || 'Active'}
+        {itemStatuses[creative._id || creative.id] || 'Active'}
       </button>,
     ],
     isAddOpen: isAddCreativeOpen,
