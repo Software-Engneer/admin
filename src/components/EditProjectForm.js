@@ -21,7 +21,7 @@ const EditProjectForm = ({ project, onSubmit, onCancel, isEditing = false }) => 
       setForm({
         title: project.title || '',
         description: project.description || '',
-        technologies: project.technologies || '',
+        technologies: Array.isArray(project.technologies) ? project.technologies.join(', ') : (project.technologies || ''),
         githubLink: project.githubLink || '',
         projectLink: project.projectLink || '',
         image: null,
