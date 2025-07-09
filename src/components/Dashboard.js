@@ -6,6 +6,7 @@ import EditProjectForm from './EditProjectForm';
 import EditCreativeForm from './EditCreativeForm';
 import Notification from './Notification';
 import apiService from '../services/api';
+import ClipLoader from 'react-spinners/ClipLoader';
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
@@ -286,19 +287,19 @@ const Dashboard = () => {
       <div className={styles.stats}>
         <div className={styles.statCard}>
           <h3>Total Projects</h3>
-          <p>{loading.stats ? '...' : stats.totalProjects}</p>
+          <p>{loading.stats ? <ClipLoader size={20} color="#36d7b7" /> : stats.totalProjects}</p>
         </div>
         <div className={styles.statCard}>
           <h3>Creative Works</h3>
-          <p>{loading.stats ? '...' : stats.totalCreativeWorks}</p>
+          <p>{loading.stats ? <ClipLoader size={20} color="#36d7b7" /> : stats.totalCreativeWorks}</p>
         </div>
         <div className={styles.statCard}>
           <h3>Total Views</h3>
-          <p>{loading.stats ? '...' : stats.totalViews}</p>
+          <p>{loading.stats ? <ClipLoader size={20} color="#36d7b7" /> : stats.totalViews}</p>
         </div>
         <div className={styles.statCard}>
           <h3>Messages</h3>
-          <p>{loading.stats ? '...' : stats.totalMessages}</p>
+          <p>{loading.stats ? <ClipLoader size={20} color="#36d7b7" /> : stats.totalMessages}</p>
         </div>
       </div>
     </section>
@@ -333,7 +334,7 @@ const Dashboard = () => {
         </div>
         <div className={styles.tableContainer}>
           {loading ? (
-            <div className={styles.loading}>Loading {title.toLowerCase()}...</div>
+            <div className={styles.loading}><ClipLoader size={32} color="#36d7b7" /></div>
           ) : (
             <table className={styles.table}>
               <thead>
@@ -499,7 +500,7 @@ const Dashboard = () => {
         <h2>Contact Messages</h2>
         <div className={styles.tableContainer}>
           {loading.messages ? (
-            <div className={styles.loading}>Loading messages...</div>
+            <div className={styles.loading}><ClipLoader size={32} color="#36d7b7" /></div>
           ) : (
             <table className={styles.table}>
               <thead>
