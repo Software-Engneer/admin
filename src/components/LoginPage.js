@@ -10,11 +10,10 @@ const LoginPage = () => {
   const [error, setError] = useState('');
   const { login } = useAuth();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    
-    const success = login(credentials);
+    const success = await login(credentials);
     if (!success) {
       setError('Invalid credentials. Please try again.');
     }
@@ -33,7 +32,6 @@ const LoginPage = () => {
         <h1>Admin Login</h1>
         <form onSubmit={handleSubmit} className={styles.loginForm}>
           {error && <div className={styles.error}>{error}</div>}
-          
           <div className={styles.formGroup}>
             <label htmlFor="email">Email</label>
             <input
@@ -46,7 +44,6 @@ const LoginPage = () => {
               className={styles.input}
             />
           </div>
-          
           <div className={styles.formGroup}>
             <label htmlFor="password">Password</label>
             <input
@@ -59,17 +56,13 @@ const LoginPage = () => {
               className={styles.input}
             />
           </div>
-          
           <button type="submit" className={styles.loginButton}>
             Login
           </button>
         </form>
-        
-        <div className={styles.demoInfo}>
-          <p><strong>Demo Credentials:</strong></p>
-          <p>Email: admin@example.com</p>
-          <p>Password: admin123</p>
-        </div>
+        <p><strong>Demo Credentials:</strong></p>
+        <p>Email: admin@example.com</p>
+        <p>Password: admin123</p>
       </div>
     </div>
   );

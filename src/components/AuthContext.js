@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import apiService from '../services/api';
 
 const AuthContext = createContext();
 
@@ -12,29 +13,48 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [token, setToken] = useState(() => localStorage.getItem('admin_token') || null);
 
-  const login = (credentials) => {
-    // Simple login logic - in a real app, you'd validate against your API
-    if (credentials.email === 'admin@example.com' && credentials.password === 'admin123') {
-      setUser({
-        name: 'Admin User',
-        email: credentials.email,
-        role: 'admin'
-      });
-      return true;
+  useEffect(() => {
+    if (token) {
+      // Optionally, decode token to get user info or fetch profile
+      const storedUser = localStorage.getItem('admin_user');
+      if (storedUser) setUser(JSON.parse(storedUser));
     }
-    return false;
+  }, [token]);
+
+  const login = async (credentials) => {
+    try {
+      const response = await apiService.request('/admin/login', {
+        method: 'POST',
+        body: JSON.stringify(credentials),
+      });
+      if (response.token) {
+        setToken(response.token);
+        setUser(response.admin);
+        localStorage.setItem('admin_token', response.token);
+        localStorage.setItem('admin_user', JSON.stringify(response.admin));
+        return true;
+      }
+      return false;
+    } catch (error) {
+      return false;
+    }
   };
 
   const logout = () => {
     setUser(null);
+    setToken(null);
+    localStorage.removeItem('admin_token');
+    localStorage.removeItem('admin_user');
   };
 
   const value = {
     user,
+    token,
     login,
     logout,
-    isAuthenticated: !!user
+    isAuthenticated: !!user && !!token,
   };
 
   return (

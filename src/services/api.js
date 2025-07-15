@@ -8,22 +8,22 @@ class ApiService {
   // Generic request method
   async request(endpoint, options = {}) {
     const url = `${this.baseURL}${endpoint}`;
-    const config = {
+    const token = localStorage.getItem('admin_token');
+    const configObj = {
       headers: {
         'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
         ...options.headers,
       },
       ...options,
     };
 
     try {
-      const response = await fetch(url, config);
-      
+      const response = await fetch(url, configObj);
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
-      
       return await response.json();
     } catch (error) {
       console.error('API request failed:', error);
@@ -34,18 +34,18 @@ class ApiService {
   // File upload request method
   async uploadFile(endpoint, formData) {
     const url = `${this.baseURL}${endpoint}`;
-    
+    const token = localStorage.getItem('admin_token');
+    const headers = token ? { Authorization: `Bearer ${token}` } : {};
     try {
       const response = await fetch(url, {
         method: 'POST',
         body: formData, // Don't set Content-Type for FormData
+        headers,
       });
-      
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
       }
-      
       return await response.json();
     } catch (error) {
       console.error('File upload failed:', error);
