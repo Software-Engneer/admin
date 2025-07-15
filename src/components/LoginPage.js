@@ -60,9 +60,7 @@ const LoginPage = () => {
             Login
           </button>
         </form>
-        <p><strong>Demo Credentials:</strong></p>
-        <p>Email: admin@example.com</p>
-        <p>Password: admin123</p>
+        {/* Demo credentials removed */}
       </div>
     </div>
   );
