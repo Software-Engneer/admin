@@ -101,6 +101,27 @@
   color: #333;
 }
 
+.spinner {
+  display: inline-block;
+  font-size: 1.3em;
+  vertical-align: middle;
+  margin-right: 0.5em;
+  animation: spin 1s linear infinite;
+}
+
+.pageSpinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  min-height: 2.5em;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 @media (max-width: 600px) {
   .loginContainer {
     padding: 0.5rem;

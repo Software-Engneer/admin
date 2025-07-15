@@ -8,12 +8,15 @@ const LoginPage = () => {
     password: ''
   });
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const { login } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
     const success = await login(credentials);
+    setLoading(false);
     if (!success) {
       setError('Invalid credentials. Please try again.');
     }
@@ -30,6 +33,11 @@ const LoginPage = () => {
     <div className={styles.loginContainer}>
       <div className={styles.loginCard}>
         <h1>Admin Login</h1>
+        {loading && (
+          <div className={styles.pageSpinner} aria-label="Loading">
+            <span className={styles.spinner}>⏳</span>
+          </div>
+        )}
         <form onSubmit={handleSubmit} className={styles.loginForm}>
           {error && <div className={styles.error}>{error}</div>}
           <div className={styles.formGroup}>
@@ -42,6 +50,7 @@ const LoginPage = () => {
               onChange={handleChange}
               required
               className={styles.input}
+              disabled={loading}
             />
           </div>
           <div className={styles.formGroup}>
@@ -54,13 +63,13 @@ const LoginPage = () => {
               onChange={handleChange}
               required
               className={styles.input}
+              disabled={loading}
             />
           </div>
-          <button type="submit" className={styles.loginButton}>
+          <button type="submit" className={styles.loginButton} disabled={loading}>
             Login
           </button>
         </form>
-        {/* Demo credentials removed */}
       </div>
     </div>
   );
